@@ -11,10 +11,12 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.ShooterConstants.FullShooterParams;
 import frc.slicelibs.TalonFXPositionalSubsystem;
 
@@ -37,6 +39,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
       Constants.ShooterConstants.VELOCITY_CONVERSION_FACTOR,
       Constants.CTRE_CONFIGS.pivotConfigs
     );
+
     setEncoderPosition(Constants.ShooterConstants.SHOOTER_STOW); // 12 degree from ground stow angle
 
     // Define the motors for spinning the flywheels.
@@ -54,17 +57,38 @@ public class Shooter extends TalonFXPositionalSubsystem {
   }
 
   /**
-   * Sets the flywheels to spin at a certain speed.
-   * @param speed The speed to set (a value between -1.0 and 1.0)
+   * Calculates the distance from the hub.
+   * @return Distance from the hub in feet.
    */
-  public void spinFlywheels(double velocity){
-    VelocityVoltage velocityRequest = new VelocityVoltage((velocity) * ( 28.0 / 20.0 ) ).withSlot(0).withFeedForward(.1);
+  public static double distanceFromHub(){
+    double distance = -1;
+    if (!LimelightHelpers.getTV("limelight-shooter")){
+      return distance; // Invalid distance
+    }
 
-    leftShooterMotor.setControl(velocityRequest);
-    rightShooterMotor.setControl(velocityRequest);
+    double offsetAngleVertical = LimelightHelpers.getTY("limelight-shooter");
+    double angleToGoal = Math.toRadians(Constants.ShooterConstants.LIMELIGHT_ANGLE + offsetAngleVertical);
+
+    distance = (Constants.FieldConstants.HUB_APRILTAG_HEIGHT - Constants.ShooterConstants.LIMELIGHT_HEIGHT) / Math.tan(angleToGoal);
+
+    return Math.abs(distance);
   }
 
-  // Move shooter hood to a position
+  /**
+   * Sets the flywheels to spin at a certain speed.
+   * @param speed The velocity in rotations per second
+   */
+  public void spinFlywheels(double velocity){
+    VelocityVoltage velocityRequest = new VelocityVoltage(0).withSlot(0).withFeedForward(.1).withEnableFOC(true);
+
+    leftShooterMotor.setControl(velocityRequest.withVelocity(velocity  * ( 28.0 / 20.0 )));
+    rightShooterMotor.setControl(velocityRequest.withVelocity(-velocity  * ( 28.0 / 20.0 )));
+  }
+
+  /**
+   * Move the shooter to a position in degrees.
+   * @param angle The angle to set in degrees
+   */
   public void pivotShooter(double angle) {
     setPosition(angle);
   }
@@ -245,6 +269,8 @@ public class Shooter extends TalonFXPositionalSubsystem {
   public void periodic() {
     SmartDashboard.putNumber("Left Shoot Velocity", getLeftVelocity());
     SmartDashboard.putNumber("Right Shoot Velocity", getRightVelocity());
+    SmartDashboard.putNumber("Pivot shooter angle: ", getPivotPosition());
+    SmartDashboard.putNumber("Distance from Hub: ", distanceFromHub());
 
     // This method will be called once per scheduler run
   }

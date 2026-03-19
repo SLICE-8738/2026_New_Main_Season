@@ -202,10 +202,10 @@ public final class Constants {
     
     public static final double FLYWHEEL_GEAR_RATIO = 1.4;
     public static final double PIVOT_GEAR_RATIO = 4.75 * 16.5;
-    public static final double POSITION_CONVERSION_FACTOR = 1.0 / PIVOT_GEAR_RATIO; // Degrees
+    public static final double POSITION_CONVERSION_FACTOR = 360; // Degrees
     public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // Degrees per Second
 
-    public static final double AIM_KP = 0.05;
+    public static final double AIM_KP = 0.6;
     public static final double AIM_KI = 0.0;
     public static final double AIM_KD = 0.0;
     public static final double AIM_KG = 0.01; //gravity feedforward
@@ -218,16 +218,14 @@ public final class Constants {
     //TODO: Populate table with real data (placeholder example data right now)
     public static final InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<>(MathUtil::inverseInterpolate, FullShooterParams::interpolate);
     static {
-      SHOOTER_MAP.put(0.5, new FullShooterParams(2800.0, 12.0, 0.38));
-      SHOOTER_MAP.put(1.0, new FullShooterParams(3100.0, 14.0, 0.45));
-      SHOOTER_MAP.put(1.5, new FullShooterParams(3400.0, 17.0, 0.52));
-      SHOOTER_MAP.put(2.0, new FullShooterParams(3650.0, 20.0, 0.60));
-      SHOOTER_MAP.put(2.5, new FullShooterParams(3900.0, 23.0, 0.68));
-      SHOOTER_MAP.put(3.0, new FullShooterParams(4100.0, 24.0, 0.76));
-      SHOOTER_MAP.put(3.5, new FullShooterParams(4350.0, 26.0, 0.85));
-      SHOOTER_MAP.put(4.0, new FullShooterParams(4550.0, 29.0, 0.94));
-      SHOOTER_MAP.put(4.5, new FullShooterParams(4700.0, 31.0, 1.00));
-      SHOOTER_MAP.put(5.0, new FullShooterParams(5000.0, 33.0, 1.10));
+      SHOOTER_MAP.put(0.5, new FullShooterParams(1240.0, 12.0, 1.04));
+      SHOOTER_MAP.put(1.02, new FullShooterParams(1300.0, 12.0, 1.24));
+      SHOOTER_MAP.put(1.58, new FullShooterParams(1450.0, 13.0, 1.11));
+      SHOOTER_MAP.put(1.98, new FullShooterParams(1550.0, 17.0, 1.14));
+      SHOOTER_MAP.put(2.74, new FullShooterParams(1600.0, 20.0, 1.11));
+      SHOOTER_MAP.put(3.65, new FullShooterParams(1675.0, 23.0, 1.08));
+      SHOOTER_MAP.put(4.79, new FullShooterParams(1779.0, 26.4, 1.26));
+
     }
 
     public record FullShooterParams(double rpm, double hoodAngle, double tof) implements Interpolatable<FullShooterParams> {
@@ -245,8 +243,8 @@ public final class Constants {
     // Robot dimensions
     public static final double SHOOTER_HEIGHT = 1.7891; // Feet
     public static final double FLYWHEEL_RADIUS = 0.1667; // Feet
-    public static final double LIMELIGHT_ANGLE = 72.5; // Degrees
-    public static final double LIMELIGHT_HEIGHT = 1.525; // Feet
+    public static final double LIMELIGHT_ANGLE = 30.29; // Degrees
+    public static final double LIMELIGHT_HEIGHT = 0.52; // Metres
   }
 
   public static class FieldConstants {
@@ -257,7 +255,7 @@ public final class Constants {
     // Height and length of the hub
     public static final double HUB_HEIGHT = 6.15; // Feet 
     public static final double HUB_HALF_LENGTH = 1.958335; // Feet  
-    public static final double HUB_APRILTAG_HEIGHT = Units.inchesToMeters(44.25); // inches  
+    public static final double HUB_APRILTAG_HEIGHT = 1.124; // Metres  
 
     // How long to speed up shooter before hub active
     public static final double SPEED_SHOOTER_AT = 4; // Seconds

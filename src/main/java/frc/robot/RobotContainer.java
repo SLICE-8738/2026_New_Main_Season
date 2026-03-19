@@ -13,6 +13,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -20,6 +21,7 @@ import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
 import frc.robot.commands.intake.OscillateIntake;
 import frc.robot.commands.intake.ToggleIntake;
+import frc.robot.commands.shooter.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Indexer;
@@ -50,6 +52,8 @@ public class RobotContainer {
     public final SpinStageOne m_spinStageOne;
     public final SpinStageTwo m_spinStageTwo;
 
+    /* Shooter */
+    public final Shoot m_Shoot;
 
     // =====================
     // Generated Swerve Drivetrain Stuff
@@ -88,9 +92,11 @@ public class RobotContainer {
         m_OscillateIntake = new OscillateIntake(m_Intake);
 
         /* Indexer */
-        m_spinStageOne = new SpinStageOne(m_Indexer, 0.2);
-        m_spinStageTwo = new SpinStageTwo(m_Indexer, 0.2);
+        m_spinStageOne = new SpinStageOne(m_Indexer, 1);
+        m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
 
+        /* Shooter */
+        m_Shoot = new Shoot(m_Shooter);
 
         configureBindings();
     }
@@ -102,6 +108,9 @@ public class RobotContainer {
         // ================
 
         /* Shooter */
+        Buttons.controller1_XButton.whileTrue(m_Shoot);
+        Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
+        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
 
         /* Intake */
         Buttons.controller1_leftBumper.whileTrue(m_ToggleIntake);
@@ -149,10 +158,11 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         // Reset the field-centric heading on left bumper press.
-        joystick.leftBumper().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
 
 
+        
     }
 
     public Command getAutonomousCommand() {

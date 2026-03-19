@@ -4,6 +4,8 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -24,15 +26,15 @@ public class Indexer extends SubsystemBase {
     // Set the motor configs
     stageOneMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.indexerConfigs);
     stageTwoMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.indexerConfigs);
-
+    
   }
 
   public void runStageOneMotor(double speed) {
-    stageOneMotor.set(speed);
+    stageOneMotor.setControl(new DutyCycleOut(speed).withEnableFOC(true));
   }
    
   public void runStageTwoMotor(double speed) {
-    stageTwoMotor.set(speed);
+    stageTwoMotor.setControl(new DutyCycleOut(speed).withEnableFOC(true));
   }
 
   public void stopAll(){

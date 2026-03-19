@@ -118,7 +118,11 @@ public class CTREConfigs {
         pivotConfigs.Slot0.kP = Constants.ShooterConstants.AIM_KP;
         pivotConfigs.Slot0.kI = Constants.ShooterConstants.AIM_KI;
         pivotConfigs.Slot0.kD = Constants.ShooterConstants.AIM_KD;
+        pivotConfigs.CurrentLimits.StatorCurrentLimit = 30;
+        pivotConfigs.CurrentLimits.SupplyCurrentLimit = 20;
         pivotConfigs.Feedback.SensorToMechanismRatio = Constants.ShooterConstants.PIVOT_GEAR_RATIO;
+        pivotConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        pivotConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
     }
 
     private void configureIntake() {
