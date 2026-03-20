@@ -22,6 +22,7 @@ import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
 import frc.robot.commands.intake.OscillateIntake;
 import frc.robot.commands.intake.ToggleIntake;
+import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -54,7 +55,9 @@ public class RobotContainer {
     public final SpinStageTwo m_spinStageTwo;
 
     /* Shooter */
-    public final Shoot m_Shoot;
+    public final AlignAndShoot m_alignAndShootHub;
+    public final AlignAndShoot m_alignAndPassLeft;
+    public final AlignAndShoot m_alignAndPassRight;
 
     // Auto chooser
     private final SendableChooser<Command> autoChooser;
@@ -74,13 +77,7 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
-    private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
-
-    private final Telemetry logger = new Telemetry(MaxSpeed);
-
-    private final CommandXboxController joystick = new CommandXboxController(0);
-
+    
     public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
@@ -106,7 +103,9 @@ public class RobotContainer {
         m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
 
         /* Shooter */
-        m_Shoot = new Shoot(m_Shooter);
+        m_alignAndShootHub = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.HUB, driverController);
+        m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
+        m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
 
         /* Triggers */
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
@@ -127,9 +126,7 @@ public class RobotContainer {
         Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         /* Shooter */
-        Buttons.controller1_RightTrigger.whileTrue(m_Shoot);
-        Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
-        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
+        Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
 
         /* Intake */
         Buttons.controller1_leftBumper.whileTrue(m_ToggleIntake);
