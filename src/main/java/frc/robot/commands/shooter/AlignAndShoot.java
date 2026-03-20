@@ -1,0 +1,107 @@
+package frc.robot.commands.shooter;
+
+import static edu.wpi.first.units.Units.*;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Indexer;
+import frc.robot.subsystems.Shooter;
+
+/**
+ * Aligns the robot heading toward a field target and shoots when ready.
+ *
+ * <p>Translation is still driver-controlled via the left stick.
+ * Rotation is overridden by a heading PID to face the target.
+ *
+ */
+public class AlignAndShoot extends Command {
+
+    public enum Target {
+        HUB, PASS_LEFT, PASS_RIGHT
+    }
+
+    private final Shooter m_shooter;
+    private final Indexer m_indexer;
+    private final CommandSwerveDrivetrain m_drivetrain;
+    private final XboxController m_driverController;
+    private final Target m_target;
+
+    private Translation2d targetPosition;
+
+    // Field-centric request: driver controls X/Y, heading PID supplies rotation
+    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
+            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    private final double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond);
+
+    public AlignAndShoot(Shooter shooter, Indexer indexer, CommandSwerveDrivetrain drivetrain,
+            Target target, XboxController driverController) {
+        m_shooter = shooter;
+        m_indexer = indexer;
+        m_drivetrain = drivetrain;
+        m_target = target;
+        m_driverController = driverController;
+        addRequirements(m_shooter, m_indexer, m_drivetrain);
+    }
+
+    @Override
+    public void initialize() {
+        boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;
+        targetPosition = switch (m_target) {
+            case HUB -> isBlue ? Constants.AlignTargets.BLUE_HUB : Constants.AlignTargets.RED_HUB;
+            case PASS_LEFT -> isBlue ? Constants.AlignTargets.BLUE_PASS_LEFT : Constants.AlignTargets.RED_PASS_LEFT;
+            case PASS_RIGHT -> isBlue ? Constants.AlignTargets.BLUE_PASS_RIGHT : Constants.AlignTargets.RED_PASS_RIGHT;
+        };
+
+        double dist = m_drivetrain.getDistanceTo(targetPosition);
+        m_shooter.calculateShot(dist, m_shooter.getHorizontalVelocity(dist, targetPosition));
+    }
+
+    @Override
+    public void execute() {
+        Translation2d compensated = m_drivetrain.getCompensatedTarget(targetPosition);
+        double dist = m_drivetrain.getDistanceTo(compensated);
+
+        if (!m_shooter.isTuningMode()) {
+            m_shooter.calculateShot(dist, m_shooter.getHorizontalVelocity(dist, compensated));
+        }
+
+        // Driver controls translation, heading PID controls rotation
+        double headingCorrection = m_drivetrain.getHeadingPIDOutput(compensated);
+        m_drivetrain.setControl(driveRequest
+                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
+                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                .withRotationalRate(headingCorrection));
+
+        m_shooter.spinFlywheels(m_shooter.getTargetVelocity());
+        m_shooter.pivotShooter(m_shooter.getTargetPosition());
+
+        if (m_drivetrain.atTargetHeading() && m_shooter.atTargetSpeed() && m_shooter.atTargetPosition()) {
+            m_indexer.runStageOneMotor(Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED);
+            m_indexer.runStageTwoMotor(Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED);
+        } else {
+            m_indexer.stopAll();
+        }
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        m_shooter.windDownFlywheels();
+        m_shooter.pivotShooter(Constants.ShooterConstants.SHOOTER_STOW);
+        m_indexer.stopAll();
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+}

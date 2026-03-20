@@ -4,19 +4,19 @@
 
 package frc.robot;
 
-import static edu.wpi.first.units.Units.*;
+import static edu.wpi.first.units.Units.MetersPerSecond;
+import static edu.wpi.first.units.Units.RadiansPerSecond;
+import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
+import com.pathplanner.lib.auto.AutoBuilder;
 
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
 import frc.robot.commands.intake.OscillateIntake;
@@ -55,6 +55,9 @@ public class RobotContainer {
     /* Shooter */
     public final Shoot m_Shoot;
 
+    // Auto chooser
+    private final SendableChooser<Command> autoChooser;
+
     // =====================
     // Generated Swerve Drivetrain Stuff
     // =====================
@@ -73,7 +76,7 @@ public class RobotContainer {
 
     private final CommandXboxController joystick = new CommandXboxController(0);
 
-    public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
+    public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
         // ==========================
@@ -81,7 +84,9 @@ public class RobotContainer {
         // ==========================
         m_Intake = new Intake();
         m_Indexer = new Indexer();
-        m_Shooter = new Shooter();
+        m_Shooter = new Shooter(m_drivetrain);
+
+        autoChooser = AutoBuilder.buildAutoChooser();
 
         // ==========================
         // Commands
@@ -110,7 +115,7 @@ public class RobotContainer {
         /* Drivetrain */
 
         // Reset the field-centric heading on left bumper press.
-        Buttons.controller1_minusButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+        Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         /* Shooter */
         Buttons.controller1_XButton.whileTrue(m_Shoot);
@@ -121,10 +126,6 @@ public class RobotContainer {
         Buttons.controller1_leftBumper.whileTrue(m_ToggleIntake);
         Buttons.controller1_RightTrigger.whileTrue(m_OscillateIntake);
 
-        // ==================
-        // Operator Controls
-        // ==================
-
 
         // =====================
         // Generated Swerve Drivetrain Stuff
@@ -132,9 +133,9 @@ public class RobotContainer {
 
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
+        m_drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
+            m_drivetrain.applyRequest(() ->
                 drive.withVelocityX(-driverController.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward) // Left Y
                     .withVelocityY(-driverController.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left) // Left X
                     .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
@@ -145,7 +146,7 @@ public class RobotContainer {
         // neutral mode is applied to the drive motors while disabled.
         final var idle = new SwerveRequest.Idle();
         RobotModeTriggers.disabled().whileTrue(
-            drivetrain.applyRequest(() -> idle).ignoringDisable(true)
+            m_drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
 
@@ -172,21 +173,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        // Simple drive forward auton
-        final var idle = new SwerveRequest.Idle();
-        return Commands.sequence(
-            // Reset our field centric heading to match the robot
-            // facing away from our alliance station wall (0 deg).
-            drivetrain.runOnce(() -> drivetrain.seedFieldCentric(Rotation2d.kZero)),
-            // Then slowly drive forward (away from us) for 5 seconds.
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(0.5)
-                    .withVelocityY(0)
-                    .withRotationalRate(0)
-            )
-            .withTimeout(5.0),
-            // Finally idle for the rest of auton
-            drivetrain.applyRequest(() -> idle)
-        );
+        return autoChooser.getSelected();
     }
 }
