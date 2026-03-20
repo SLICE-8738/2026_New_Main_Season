@@ -201,8 +201,8 @@ public final class Constants {
 
         public static final double STOWED_POSITION = 0.0; // Meters
         public static final double DEPLOYED_POSITION = 0.2921; // Meters
-        public static final double OSCILLATION_AMOUNT = .02; // Meters; how far it goes out
-        public static final double OSCILLATION_DIFF = .01; // Meters; how much further it goes in
+        public static final double OSCILLATION_AMOUNT = .2; // Meters; how far it goes out
+        public static final double OSCILLATION_DIFF = .1; // Meters; how much further it goes in
         // Roller motor constants
         public static final double ROLLER_SPEED = 0.8;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
