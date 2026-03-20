@@ -103,7 +103,7 @@ public class RobotContainer {
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-        autoChooser = AutoBuilder.buildAutoChooser("Test Path");
+        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
         // ==========================
@@ -139,7 +139,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
-        NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
+      //  NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
 
         // ================
