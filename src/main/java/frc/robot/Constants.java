@@ -187,7 +187,7 @@ public final class Constants {
         public static final int EXTENDER_MOTOR_ID = 5;
 
         // Positional subsystem constants
-        public static final double EXTENDER_KP = 0.2;
+        public static final double EXTENDER_KP = 1.0;
         public static final double EXTENDER_KI = 0.0;
         public static final double EXTENDER_KD = 0.0;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this
