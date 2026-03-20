@@ -106,6 +106,8 @@ public class RobotContainer {
         autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
         SmartDashboard.putData("Auto Mode", autoChooser);
 
+        
+
         // ==========================
         // Commands
         // ==========================
@@ -130,17 +132,17 @@ public class RobotContainer {
         /* Triggers */
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
         indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed());
-
-        configureBindings();
-    }
-
-    private void configureBindings() {
-
+        
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
       //  NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
+        
+        configureBindings();
+    }
+
+    private void configureBindings() {
 
         // ================
         // Driver Controls
