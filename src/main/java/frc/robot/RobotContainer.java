@@ -135,17 +135,13 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        // HashMap<String, Command> eventMap = new HashMap<>();
-        // eventMap.put("67676767676776767", m_ExtendIntake);
-
 
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
-      //  NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
-        NamedCommands.registerCommand("67676767767", m_RetractIntake);
+        NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
+        NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
 
-        NamedCommands.registerCommand("Align and Shoot", m_alignAndShootHub);
         // ================
         // Driver Controls
         // ================

@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "Extend Intake",
+      "name": "Spin Intake",
       "waypointRelativePos": 0.49604221635883916,
       "endWaypointRelativePos": null,
       "command": null

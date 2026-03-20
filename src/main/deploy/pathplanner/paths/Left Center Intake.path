@@ -98,12 +98,6 @@
       "waypointRelativePos": 3.0,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "Retract Intake",
-      "waypointRelativePos": 3.0,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {
@@ -116,7 +110,7 @@
   },
   "goalEndState": {
     "velocity": 1.2,
-    "rotation": 180.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": null,
