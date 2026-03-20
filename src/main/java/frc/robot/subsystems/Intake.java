@@ -32,7 +32,7 @@ public class Intake extends TalonFXPositionalSubsystem {
     super(
       new int[] { Constants.IntakeConstants.EXTENDER_MOTOR_ID },
       new boolean[] { false },
-      Constants.IntakeConstants.EXTENDER_KP, Constants.IntakeConstants.EXTENDER_KI, Constants.IntakeConstants.EXTENDER_KP, Constants.IntakeConstants.EXTENDER_KG,
+      Constants.IntakeConstants.EXTENDER_KP, Constants.IntakeConstants.EXTENDER_KI, Constants.IntakeConstants.EXTENDER_KD, Constants.IntakeConstants.EXTENDER_KG,
       Constants.IntakeConstants.EXTENDER_RATIO,
       GravityTypeValue.Elevator_Static,
       Constants.IntakeConstants.POSITION_CONVERSION_FACTOR,
@@ -66,6 +66,10 @@ public class Intake extends TalonFXPositionalSubsystem {
    */
   public void moveIntakeToPosition(double position) {
     setPosition(position);
+  }
+
+  public void extendSetSpeed(double speed){
+    set(speed);
   }
   
   public boolean isStowed() { return (getExtenderPosition() < .127); } //5" bumper tolerance

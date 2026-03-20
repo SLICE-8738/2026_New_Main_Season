@@ -20,6 +20,7 @@ public class ExtendIntake extends Command {
   @Override
   public void initialize() {
     m_intake.setPosition(Constants.IntakeConstants.DEPLOYED_POSITION);
+    m_intake.spinRoller(Constants.IntakeConstants.ROLLER_SPEED);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

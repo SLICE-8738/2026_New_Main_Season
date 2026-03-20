@@ -8,6 +8,9 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
@@ -70,6 +73,7 @@ public class AlignAndShoot extends Command {
     public void execute() {
         Translation2d compensated = m_drivetrain.getCompensatedTarget(targetPosition);
         double dist = m_drivetrain.getDistanceTo(compensated);
+        SmartDashboard.putNumber("Distance to hub: ", dist);
 
         if (!m_shooter.isTuningMode()) {
             m_shooter.calculateShot(dist, m_shooter.getHorizontalVelocity(dist, compensated));
@@ -78,8 +82,8 @@ public class AlignAndShoot extends Command {
         // Driver controls translation, heading PID controls rotation
         double headingCorrection = m_drivetrain.getHeadingPIDOutput(compensated);
         m_drivetrain.setControl(driveRequest
-                .withVelocityX(-m_driverController.getLeftY() * MaxSpeed)
-                .withVelocityY(-m_driverController.getLeftX() * MaxSpeed)
+                .withVelocityX(m_driverController.getLeftY() * MaxSpeed)
+                .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
                 .withRotationalRate(headingCorrection));
 
         m_shooter.spinFlywheels(m_shooter.getTargetVelocity());

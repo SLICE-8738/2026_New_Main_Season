@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -91,11 +93,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Constants.AlignTargets.HEADING_KI,
             Constants.AlignTargets.HEADING_KD);
 
+
+    private Field2d field;
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
-        configHeadingPID();
         configureAutoBuilder();
+        configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
     }
@@ -103,8 +108,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        configHeadingPID();
         configureAutoBuilder();
+        configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
     }
@@ -114,8 +119,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Matrix<N3, N1> visionStandardDeviation, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
-        configHeadingPID();
         configureAutoBuilder();
+        configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
     }
@@ -126,25 +131,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void configureAutoBuilder() {
-    try {
-        RobotConfig config = RobotConfig.fromGUISettings();
-        AutoBuilder.configure(
-            this::getPose,
-            this::resetPose,
-            this::getChassisSpeeds,
-            (speeds, feedforwards) -> setControl(autoRequest.withSpeeds(speeds)),
-            new PPHolonomicDriveController(
-                new PIDConstants(5.0, 0, 0),
-                new PIDConstants(5.0, 0, 0)
-            ),
-            config,
-            () -> DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red,
-            this
-        );
-    } catch (Exception e) {
-        e.printStackTrace();
+        field = new Field2d();
+
+        
+        try {
+            RobotConfig config = RobotConfig.fromGUISettings();
+            AutoBuilder.configure(
+                this::getPose,
+                this::resetPose,
+                this::getChassisSpeeds,
+                (speeds, feedforwards) -> setControl(autoRequest.withSpeeds(speeds)),
+                new PPHolonomicDriveController(
+                    new PIDConstants(5.0, 0, 0),
+                    new PIDConstants(5.0, 0, 0)
+                ),
+                config,
+                () -> DriverStation.getAlliance().orElse(Alliance.Red) == Alliance.Red,
+                this
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-}
 
     // -------------------------------------------------------------------------
     // Core drivetrain commands
@@ -223,9 +231,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double dist = getDistanceTo(realTarget);
         double tof = Constants.ShooterConstants.SHOOTER_MAP.get(dist).tof();
         ChassisSpeeds fieldSpeeds = getFieldRelativeSpeeds();
+        //return realTarget;
         return new Translation2d(
-                realTarget.getX() - fieldSpeeds.vxMetersPerSecond * tof,
+                realTarget.getX() - fieldSpeeds.vxMetersPerSecond * tof, //TODO multiply by factor possibly
                 realTarget.getY() - fieldSpeeds.vyMetersPerSecond * tof);
+        
     }
 
     // Heading PID helpers (used by AlignAndShoot)
@@ -234,7 +244,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Rotation2d getTargetHeading(Translation2d target) {
         Translation2d robotPos = getPose().getTranslation();
-        return Rotation2d.fromRadians(Math.atan2(
+        return Rotation2d.fromRadians(0.5 * Math.atan2(
                 target.getY() - robotPos.getY(),
                 target.getX() - robotPos.getX()));
     }
@@ -291,11 +301,16 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void periodic() {
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent(allianceColor -> {
-                setOperatorPerspectiveForward(allianceColor == Alliance.Red ? kRedAlliancePerspectiveRotation
-                        : kBlueAlliancePerspectiveRotation);
+                setOperatorPerspectiveForward(
+                    allianceColor == Alliance.Red
+                        ? kRedAlliancePerspectiveRotation
+                        : kBlueAlliancePerspectiveRotation
+                );
                 m_hasAppliedOperatorPerspective = true;
             });
         }
+        field.setRobotPose(getState().Pose);
+        SmartDashboard.putData("Pose", field);
 
         // Vision update with MegaTag2 if tags visible
         var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");

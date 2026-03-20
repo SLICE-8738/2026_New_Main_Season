@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.subsystems.Shooter;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class Shoot extends Command {
@@ -18,12 +19,16 @@ public class Shoot extends Command {
   private ShuffleboardTab m_ShuffleboardTab;
   private GenericEntry m_ShuffleboardAngle;
   private GenericEntry m_ShuffleboardRPM;
+  private GenericEntry m_ShuffleboardDistance;
+  private final CommandSwerveDrivetrain m_drivetrain;
   /** Creates a new Shoot. */
-  public Shoot(Shooter shooter) {
+  public Shoot(Shooter shooter, CommandSwerveDrivetrain drivetrain) {
     m_Shooter = shooter;
+    m_drivetrain = drivetrain;
     m_ShuffleboardTab = Shuffleboard.getTab("Shooter Tuning");
     m_ShuffleboardAngle = m_ShuffleboardTab.add("Angle: ", 12).getEntry();
     m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", 0).getEntry();
+    m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0).getEntry();
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -34,9 +39,10 @@ public class Shoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distance = Shooter.distanceFromHub();
-    double angle = Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    double distance = m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
+    m_ShuffleboardDistance.setDouble(distance);
+    double angle = m_ShuffleboardAngle.getDouble(12);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
+    double rps = m_ShuffleboardRPM.getDouble(0);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
     m_Shooter.pivotShooter(angle);
     m_Shooter.spinFlywheels(-1.0 * rps);
   }

@@ -259,6 +259,11 @@ public class Shooter extends TalonFXPositionalSubsystem {
         tuningMode = SmartDashboard.getBoolean("Shooter/TuningMode", false);
         SmartDashboard.putBoolean("Shooter/TuningMode", tuningMode);
 
+        SmartDashboard.putNumber("Shooter velocity: ", getFlywheelSpeed());
+        SmartDashboard.putNumber("Shooter supposed velocity: ", targetSpeed);
+        SmartDashboard.putNumber("Shooter angle: ", getPivotPosition());
+        SmartDashboard.putNumber("Shooter supposed angle: ", targetPosition);
+
         if (tuningMode) {
             tunedRPM = SmartDashboard.getNumber("Shooter/TunedRPM", tunedRPM);
             tunedHoodAngle = SmartDashboard.getNumber("Shooter/TunedHoodAngle", tunedHoodAngle);

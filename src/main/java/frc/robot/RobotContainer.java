@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -70,6 +71,7 @@ public class RobotContainer {
     public final AlignAndShoot m_alignAndShootHub;
     public final AlignAndShoot m_alignAndPassLeft;
     public final AlignAndShoot m_alignAndPassRight;
+    public final Shoot m_shoot;
 
     // Auto chooser
     private final SendableChooser<Command> autoChooser;
@@ -96,11 +98,13 @@ public class RobotContainer {
         // ==========================
         // Subsystems
         // ==========================
+        //m_drivetrain = TunerConstants.createDrivetrain();
         m_Intake = new Intake();
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-        autoChooser = AutoBuilder.buildAutoChooser();
+        //autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser = null;
 
         // ==========================
         // Commands
@@ -119,6 +123,7 @@ public class RobotContainer {
         m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
 
         /* Shooter */
+        m_shoot = new Shoot(m_Shooter, m_drivetrain);
         m_alignAndShootHub = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.HUB, driverController);
         m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
         m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
@@ -146,6 +151,7 @@ public class RobotContainer {
         //Buttons.controller1_RightTrigger.whileTrue(m_Shoot);
         //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
         Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
+        Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
 
 
         /* Intake */
@@ -155,6 +161,7 @@ public class RobotContainer {
         // ============
         // Other Triggers
         // ============
+        // TODO fix and uncomment after testing
         oscillateTrigger.whileTrue(m_OscillateIntake);
         indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
 
@@ -168,8 +175,8 @@ public class RobotContainer {
         m_drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             m_drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driverController.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward) // Left Y
-                    .withVelocityY(-driverController.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left) // Left X
+                drive.withVelocityX(driverController.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward) // Left Y
+                    .withVelocityY(driverController.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left) // Left X
                     .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
             )
         );
