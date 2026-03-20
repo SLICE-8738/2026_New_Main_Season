@@ -284,12 +284,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     public void resetPose(Pose2d pose) {
-        try {
-            resetRotation(pose.getRotation());
-            seedFieldCentric();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        super.resetPose(pose);
     }
 
     @Override
