@@ -107,6 +107,11 @@ public class RobotContainer {
         // Driver Controls
         // ================
 
+        /* Drivetrain */
+
+        // Reset the field-centric heading on left bumper press.
+        Buttons.controller1_minusButton.onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
+
         /* Shooter */
         Buttons.controller1_XButton.whileTrue(m_Shoot);
         Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
@@ -130,9 +135,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-joystick.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-joystick.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driverController.getRawAxis(1) * MaxSpeed) // Drive forward with negative Y (forward) // Left Y
+                    .withVelocityY(-driverController.getRawAxis(0) * MaxSpeed) // Drive left with negative X (left) // Left X
+                    .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
             )
         );
 
@@ -143,9 +148,9 @@ public class RobotContainer {
             drivetrain.applyRequest(() -> idle).ignoringDisable(true)
         );
 
-        // =========
-        // TODO change all this stuff from using the Command Xbox Controller thingy to using our Buttons class and the PS4 Controller class
-        // =========
+
+        /* 
+         * THIS IS FOR SYSID TESTING
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->
@@ -161,6 +166,7 @@ public class RobotContainer {
         joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
         drivetrain.registerTelemetry(logger::telemeterize);
 
+        */
 
         
     }
