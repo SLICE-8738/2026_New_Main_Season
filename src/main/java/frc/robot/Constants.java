@@ -133,46 +133,11 @@ public final class Constants {
         public static final double MAX_LINEAR_VELOCITY = 4.5; // m/s
         public static final double MAX_ANGULAR_VELOCITY = 5.279; // rad/s
 
-        /*
-         * //TODO remake PathPlanner constants
-         * 
-         * // PathPlanner
-         * public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS
-         * =
-         * new com.pathplanner.lib.path.PathConstraints(3.5, 2.5, Math.PI * 2, Math.PI *
-         * 2);
-         * public static final double TRANSLATION_KP = 4.5;
-         * public static final double ROTATION_KP = 1.0;
-         * 
-         * //TODO I don't think these swerve module constants are necessary anymore, but
-         * I could indeed be wrong
-         * 
-         * // Per-module constants (drive ID, turn ID, CANcoder ID, angle offset)
-         * public static final frc.slicelibs.configs.SwerveModuleConstants
-         * FRONT_LEFT_MODULE =
-         * new frc.slicelibs.configs.SwerveModuleConstants(
-         * FRONT_LEFT_DRIVE_ID, FRONT_LEFT_TURN_ID, FRONT_LEFT_ENCODER_ID,
-         * Rotation2d.fromRotations(0.516602));
-         * 
-         * public static final frc.slicelibs.configs.SwerveModuleConstants
-         * FRONT_RIGHT_MODULE =
-         * new frc.slicelibs.configs.SwerveModuleConstants(
-         * FRONT_RIGHT_DRIVE_ID, FRONT_RIGHT_TURN_ID, FRONT_RIGHT_ENCODER_ID,
-         * Rotation2d.fromRotations(0.479248));
-         * 
-         * public static final frc.slicelibs.configs.SwerveModuleConstants
-         * BACK_RIGHT_MODULE =
-         * new frc.slicelibs.configs.SwerveModuleConstants(
-         * BACK_RIGHT_DRIVE_ID, BACK_RIGHT_TURN_ID, BACK_RIGHT_ENCODER_ID,
-         * Rotation2d.fromRotations(0.817139));
-         * 
-         * public static final frc.slicelibs.configs.SwerveModuleConstants
-         * BACK_LEFT_MODULE =
-         * new frc.slicelibs.configs.SwerveModuleConstants(
-         * BACK_LEFT_DRIVE_ID, BACK_LEFT_TURN_ID, BACK_LEFT_ENCODER_ID,
-         * Rotation2d.fromRotations(0.519043));
-         * 
-         */
+        // PathPlanner, TODO: remake PathPlanner constants
+        public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS = new com.pathplanner.lib.path.PathConstraints(
+                4.5, 3.0, Math.PI * 2, Math.PI * 2);
+        public static final double TRANSLATION_KP = 4.5;
+        public static final double ROTATION_KP = 1.0;
     }
 
     public static final class OIConstants {
@@ -194,9 +159,7 @@ public final class Constants {
         public static final double EXTENDER_RATIO = 50.0 / 9.0; // 5.55 repeating
         public static final int EXTENDER_STATOR_CURRENT_LIMIT = 60;
         public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 40;
-        public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI) * EXTENDER_RATIO; // (pitch diameter
-                                                                                                     // of pinion * pi)
-                                                                                                     // * ratio
+        public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI) * EXTENDER_RATIO; // (pitch diameter of pinion * pi) * ratio
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // meters per second
 
         public static final double STOWED_POSITION = 0.0; // Meters
@@ -241,7 +204,8 @@ public final class Constants {
         public static final double SHOOTER_STOW = 12.0; // The angle at which the shooter is considered stowed
         public static final double FLYWHEEL_RPM_ACCEPTABLE_ERROR = 10.0; // rpm
         public static final double VERTICAL_AIM_ACCEPTABLE_ERROR = .1; // degrees
-        // TODO: Populate table with real data (placeholder example data right now)
+
+        // TODO: Add an offset from the apriltag to the hub center = 0.60375 m
         public static final InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<>(
                 MathUtil::inverseInterpolate, FullShooterParams::interpolate);
         static {
@@ -250,8 +214,8 @@ public final class Constants {
             SHOOTER_MAP.put(1.58, new FullShooterParams(1450.0, 13.0, 1.11));
             SHOOTER_MAP.put(1.98, new FullShooterParams(1550.0, 17.0, 1.14));
             SHOOTER_MAP.put(2.74, new FullShooterParams(1600.0, 20.0, 1.11));
-            SHOOTER_MAP.put(3.65, new FullShooterParams(1675.0, 23.0, 1.08));
-            SHOOTER_MAP.put(4.79, new FullShooterParams(1779.0, 26.4, 1.26));
+            SHOOTER_MAP.put(3.65, new FullShooterParams(1678.0, 23.0, 1.08));
+            SHOOTER_MAP.put(4.79, new FullShooterParams(1778.0, 26.4, 1.26));
 
         }
 

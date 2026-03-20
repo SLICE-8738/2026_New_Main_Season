@@ -149,7 +149,7 @@ public class RobotContainer {
 
 
         /* Intake */
-        Buttons.controller1_LeftTrigger.whileTrue(m_IntakeCommand);
+        Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand);
         Buttons.controller1_AButton.onTrue(m_RetractIntake);
 
         // ============

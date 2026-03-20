@@ -75,7 +75,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
     /**
      * Projects the robot's field-relative velocity onto the robot-to-target vector
      * to compute
-     * the required horizontal ball velocity, accounting for robot movement (SWIM
+     * the required horizontal ball velocity (velocity needed to reach target directly), accounting for robot movement (SWIM
      * compensation).
      *
      * @param distance current distance to target in meters
@@ -114,8 +114,8 @@ public class Shooter extends TalonFXPositionalSubsystem {
     }
 
     public void windDownFlywheels() {
-        leftShooterMotor.set(0);
-        rightShooterMotor.set(0);
+        leftShooterMotor.stopMotor();
+        rightShooterMotor.stopMotor();
     }
 
     public static double distanceFromHub() {

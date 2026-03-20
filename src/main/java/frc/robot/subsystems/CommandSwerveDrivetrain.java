@@ -298,7 +298,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         // Vision update with MegaTag2 if tags visible
-        var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
         if (limelightPose != null && limelightPose.tagCount > 0) {
             addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
         }

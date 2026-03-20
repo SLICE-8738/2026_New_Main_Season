@@ -6,6 +6,7 @@ package frc.robot.subsystems;
 
 import java.util.function.BooleanSupplier;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -22,6 +23,8 @@ import frc.slicelibs.TalonFXPositionalSubsystem;
 public class Intake extends TalonFXPositionalSubsystem {
 
   private TalonFX rotationMotor;
+
+  DutyCycleOut rollerRequest = new DutyCycleOut(0).withEnableFOC(true);
 
   /** Creates a new Intake. */
   public Intake() {
@@ -51,11 +54,11 @@ public class Intake extends TalonFXPositionalSubsystem {
    * @param speed speed to set the motor to (-1.0 to 1.0)
    */
   public void spinRoller(double speed) {
-    rotationMotor.set(speed);
+    rotationMotor.setControl(rollerRequest.withOutput(speed));
   }
 
   public void stopRoller() {
-    rotationMotor.set(0.0);
+    rotationMotor.stopMotor();
   }
   /**
    * Moves the intake to the set position
