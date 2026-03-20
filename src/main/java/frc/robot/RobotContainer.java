@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
 import frc.robot.commands.intake.OscillateIntake;
@@ -57,6 +58,10 @@ public class RobotContainer {
 
     // Auto chooser
     private final SendableChooser<Command> autoChooser;
+
+    /* Triggers */
+    private Trigger oscillateTrigger;
+    private Trigger indexerTrigger;
 
     // =====================
     // Generated Swerve Drivetrain Stuff
@@ -103,6 +108,10 @@ public class RobotContainer {
         /* Shooter */
         m_Shoot = new Shoot(m_Shooter);
 
+        /* Triggers */
+        oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
+        indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed());
+
         configureBindings();
     }
 
@@ -118,13 +127,19 @@ public class RobotContainer {
         Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         /* Shooter */
-        Buttons.controller1_XButton.whileTrue(m_Shoot);
+        Buttons.controller1_RightTrigger.whileTrue(m_Shoot);
         Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
         //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
 
         /* Intake */
         Buttons.controller1_leftBumper.whileTrue(m_ToggleIntake);
-        Buttons.controller1_RightTrigger.whileTrue(m_OscillateIntake);
+        //Buttons.controller1_RightTrigger.whileTrue(m_OscillateIntake);
+
+        // ============
+        // Other Triggers
+        // ============
+        oscillateTrigger.whileTrue(m_OscillateIntake);
+        indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
 
 
         // =====================
