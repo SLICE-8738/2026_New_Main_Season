@@ -16,6 +16,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -100,7 +101,8 @@ public class RobotContainer {
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser = AutoBuilder.buildAutoChooser("Test Path");
+        SmartDashboard.putData("Auto Mode", autoChooser);
 
         // ==========================
         // Commands
