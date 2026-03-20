@@ -8,6 +8,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.concurrent.locks.AbstractQueuedLongSynchronizer.ConditionObject;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -15,13 +17,19 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
+
 import frc.robot.commands.intake.OscillateIntake;
-import frc.robot.commands.intake.ToggleIntake;
+import frc.robot.commands.intake.ExtendIntake;
+import frc.robot.commands.intake.RetractIntake;
+import frc.robot.commands.intake.Spintake;
+import frc.robot.commands.intake.Stoptake;
+
 import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.generated.TunerConstants;
@@ -47,8 +55,12 @@ public class RobotContainer {
     // ==========================
 
     /* Intake */
-    public final ToggleIntake m_ToggleIntake;
+    public final ExtendIntake m_ExtendIntake;
+    public final RetractIntake m_RetractIntake;
+    public final Spintake m_Spintake;
+    public final Stoptake m_Stoptake;
     public final OscillateIntake m_OscillateIntake;
+    public final ConditionalCommand m_IntakeCommand;
 
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
@@ -95,8 +107,12 @@ public class RobotContainer {
         // ==========================
 
         /* Intake */
-        m_ToggleIntake    = new ToggleIntake(m_Intake, m_Indexer);
+        m_ExtendIntake    = new ExtendIntake(m_Intake);
+        m_RetractIntake   = new RetractIntake(m_Intake);
+        m_Spintake        = new Spintake(m_Intake);
         m_OscillateIntake = new OscillateIntake(m_Intake);
+        m_Stoptake        = new Stoptake(m_Intake);
+        m_IntakeCommand   = new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
@@ -122,15 +138,19 @@ public class RobotContainer {
 
         /* Drivetrain */
 
-        // Reset the field-centric heading on left bumper press.
+        // Reset the field-centric heading on minus press.
         Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         /* Shooter */
+
+        //Buttons.controller1_RightTrigger.whileTrue(m_Shoot);
+        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
         Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
 
+
         /* Intake */
-        Buttons.controller1_leftBumper.whileTrue(m_ToggleIntake);
-        //Buttons.controller1_RightTrigger.whileTrue(m_OscillateIntake);
+        Buttons.controller1_LeftTrigger.whileTrue(m_IntakeCommand);
+        Buttons.controller1_AButton.onTrue(m_RetractIntake);
 
         // ============
         // Other Triggers
