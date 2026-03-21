@@ -37,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.LimelightHelpers.PoseEstimate;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -100,7 +101,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
-        configureAutoBuilder();
+        //configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -109,7 +110,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        configureAutoBuilder();
+        //configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -120,7 +121,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Matrix<N3, N1> visionStandardDeviation, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
-        configureAutoBuilder();
+        //configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -132,6 +133,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void configureAutoBuilder() {
+            field = new Field2d();
             try {
                 var config = RobotConfig.fromGUISettings();
                 AutoBuilder.configure(
@@ -319,9 +321,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putData("Pose", field);
 
         // Vision update with MegaTag2 if tags visible
-        var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-        if (limelightPose != null && limelightPose.tagCount > 0) {
+        
+        if (DriverStation.getAlliance().equals(Alliance.Red)) {
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-shooter");
+            if (limelightPose != null && limelightPose.tagCount > 0) {
             addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
         }
+        } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
+            if (limelightPose != null && limelightPose.tagCount > 0) {
+            addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+        }
+        }
+        
+        
+        
     }
 }

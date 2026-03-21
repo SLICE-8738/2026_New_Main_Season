@@ -162,12 +162,12 @@ public final class Constants {
         public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI); // (pitch diameter of pinion * pi)
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // meters per second
 
-        public static final double STOWED_POSITION = 0.05; // Meters
-        public static final double DEPLOYED_POSITION = 0.29; // Meters
+        public static final double STOWED_POSITION = 0.044; // Meters
+        public static final double DEPLOYED_POSITION = 0.29-.006; // Meters
         public static final double OSCILLATION_AMOUNT = .2; // Meters; how far it goes out
         public static final double OSCILLATION_DIFF = .1; // Meters; how much further it goes in
         // Roller motor constants
-        public static final double ROLLER_SPEED = 0.8;
+        public static final double ROLLER_SPEED = 0.9;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
         public static final double ROLLER_GEAR_RATIO = 2.0;
         public static final int ROLLER_STATOR_CURRENT_LIMIT = 40;

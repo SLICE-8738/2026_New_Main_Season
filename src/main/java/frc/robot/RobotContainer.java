@@ -77,7 +77,8 @@ public class RobotContainer {
     public final Shoot m_shoot;
 
     // Auto chooser
-    private final SendableChooser<Command> autoChooser;
+    // TODO figure the heckin pathplanner code
+    //private final SendableChooser<Command> autoChooser;
 
     /* Triggers */
     private Trigger oscillateTrigger;
@@ -106,8 +107,8 @@ public class RobotContainer {
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        SmartDashboard.putData("Auto Mode", autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        //SmartDashboard.putData("Auto Mode", autoChooser);
 
         
 
@@ -173,7 +174,7 @@ public class RobotContainer {
         // Other Triggers
         // ============
         // TODO fix and uncomment after testing
-        oscillateTrigger.whileTrue(m_OscillateIntake);
+        //oscillateTrigger.whileTrue(m_OscillateIntake);
         indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
 
 
@@ -223,6 +224,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return autoChooser.getSelected();
+        return null;
     }
 }
