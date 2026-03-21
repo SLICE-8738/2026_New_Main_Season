@@ -2,23 +2,28 @@ package frc.robot.commands.intake;
 
 import frc.robot.Constants;
 import frc.robot.subsystems.Intake;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class RetractIntake extends Command {
 
   private Intake m_intake;
+  private Timer m_Timer;
 
   /**
    * Creates a new intake.
    */
   public RetractIntake (Intake intake) {
     m_intake = intake;
+    m_Timer = new Timer();
     addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    m_Timer.reset();
+    m_Timer.start();
     m_intake.setPosition(Constants.IntakeConstants.STOWED_POSITION);
     m_intake.stopRoller();
   }
@@ -34,6 +39,10 @@ public class RetractIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_intake.isStowed();
+    if(m_Timer.get() >= 3){
+      return true;
+    }
+    return false;
+    //return m_intake.isStowed();
   }
 }
