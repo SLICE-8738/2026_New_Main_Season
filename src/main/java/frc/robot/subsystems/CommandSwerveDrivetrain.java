@@ -27,6 +27,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -95,8 +97,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Constants.AlignTargets.HEADING_KI,
             Constants.AlignTargets.HEADING_KD);
 
-
-    private Field2d field;
+    
+    /* ShuffleBoard Stuffs */
+    ShuffleboardTab driverTab;
+    public Field2d m_Field;
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
@@ -105,6 +109,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
+
+        m_Field = new Field2d();
+        driverTab = Shuffleboard.getTab("Driver");
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -114,6 +121,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
+        
+        m_Field = new Field2d();
+        //driverTab = Shuffleboard.getTab("Driver"); TODO i dont think we need this but we'll see
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -125,6 +135,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
+
+        m_Field = new Field2d();
+        //driverTab = Shuffleboard.getTab("Driver");
     }
 
     private void configHeadingPID() {
@@ -133,7 +146,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void configureAutoBuilder() {
-            field = new Field2d();
+            //field = new Field2d();
             try {
                 var config = RobotConfig.fromGUISettings();
                 AutoBuilder.configure(
@@ -317,8 +330,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        field.setRobotPose(getState().Pose);
-        SmartDashboard.putData("Pose", field);
+        m_Field.setRobotPose(getState().Pose);
+        SmartDashboard.putData("Pose", m_Field);
+        
 
         // Vision update with MegaTag2 if tags visible
         
