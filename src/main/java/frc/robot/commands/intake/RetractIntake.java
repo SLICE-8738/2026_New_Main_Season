@@ -35,6 +35,8 @@ public class RetractIntake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_intake.setBrakeMode();
+    m_intake.extendSetSpeed(0);
     m_Timer.start();
     m_Timer.reset();
    

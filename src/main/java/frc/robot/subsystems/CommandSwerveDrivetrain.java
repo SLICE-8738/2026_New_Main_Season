@@ -13,6 +13,7 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -97,6 +98,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Constants.AlignTargets.HEADING_KI,
             Constants.AlignTargets.HEADING_KD);
 
+    //private Pigeon2 m_Pigeon2 = new Pigeon2(Constants.DriveConstants.GYRO_ID);
     
     /* ShuffleBoard Stuffs */
     ShuffleboardTab driverTab;
@@ -105,25 +107,42 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
-        //configureAutoBuilder();
+       // configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
 
         m_Field = new Field2d();
         driverTab = Shuffleboard.getTab("Driver");
+
+        //m_Pigeon2 = new Pigeon2(Constants.)
+        /* 
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            m_Pigeon2.setYaw(0);
+        } else {
+            m_Pigeon2.setYaw(180);
+        }
+        */
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        //configureAutoBuilder();
+       // configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
         
         m_Field = new Field2d();
         //driverTab = Shuffleboard.getTab("Driver"); TODO i dont think we need this but we'll see
+
+        /* 
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            m_Pigeon2.setYaw(0);
+        } else {
+            m_Pigeon2.setYaw(180);
+        }
+        */
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -131,13 +150,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Matrix<N3, N1> visionStandardDeviation, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
-        //configureAutoBuilder();
+      //  configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
 
         m_Field = new Field2d();
         //driverTab = Shuffleboard.getTab("Driver");
+
+        /* 
+        if(DriverStation.getAlliance().get() == Alliance.Blue){
+            m_Pigeon2.setYaw(0);
+        } else {
+            m_Pigeon2.setYaw(180);
+        }
+        */
     }
 
     private void configHeadingPID() {
@@ -250,12 +277,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Translation2d getCompensatedTarget(Translation2d realTarget) {
         double dist = getDistanceTo(realTarget);
-        double tof = Constants.ShooterConstants.SHOOTER_MAP.get(dist).tof();
-        ChassisSpeeds fieldSpeeds = getFieldRelativeSpeeds();
-        //return realTarget;
+        // double tof = Constants.ShooterConstants.SHOOTER_MAP.get(dist).tof();
+        // ChassisSpeeds fieldSpeeds = getFieldRelativeSpeeds();
+        // double compensationFactor = 0.7;
+        // //return realTarget;
         return new Translation2d(
-                realTarget.getX() - fieldSpeeds.vxMetersPerSecond * tof, //TODO multiply by factor possibly
-                realTarget.getY() - fieldSpeeds.vyMetersPerSecond * tof);
+                 realTarget.getX() /*- fieldSpeeds.vxMetersPerSecond * tof * compensationFactor*/, //TODO multiply by factor possibly
+                 realTarget.getY()) /*- fieldSpeeds.vyMetersPerSecond * tof * compensationFactor)*/;
         
     }
 
@@ -265,7 +293,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Rotation2d getTargetHeading(Translation2d target) {
         Translation2d robotPos = getPose().getTranslation();
-        return Rotation2d.fromRadians(0.5 * Math.atan2(
+        return Rotation2d.fromRadians(Math.atan2(
                 target.getY() - robotPos.getY(),
                 target.getX() - robotPos.getX()));
     }
@@ -336,19 +364,25 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         // Vision update with MegaTag2 if tags visible
         
-        if (DriverStation.getAlliance().equals(Alliance.Red)) {
+        if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter"); //TODO figure this ou
+            /*
+            if (limelightPose != null && limelightPose.tagCount > 0 && ) {
+            addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+            }
+            */
+        } else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+            //LimelightHelpers.SetRobotOrientation("limelight-shooter", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
             var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-shooter");
+            /*
             if (limelightPose != null && limelightPose.tagCount > 0) {
             addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
-        }
-        } else if (DriverStation.getAlliance().equals(Alliance.Blue)) {
-            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter");
-            if (limelightPose != null && limelightPose.tagCount > 0) {
-            addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
-        }
-        }
+            }   
+            */
+
         
         
         
+       }
     }
 }

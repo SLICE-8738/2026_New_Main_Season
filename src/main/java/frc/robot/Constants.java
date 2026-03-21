@@ -56,8 +56,8 @@ public final class Constants {
         public static final int STAGE_ONE_MOTOR_ID = 18;
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
-        public static final double STAGE_ONE_INTAKE_SPEED = 0.5;
-        public static final double STAGE_TWO_INTAKE_SPEED = 0.5;
+        public static final double STAGE_ONE_INTAKE_SPEED = 0.8;
+        public static final double STAGE_TWO_INTAKE_SPEED = 0.8;
 
         public static final int INDEXER_STATOR_CURRENT_LIMIT = 40;
         public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 30;
@@ -134,8 +134,8 @@ public final class Constants {
         public static final double MAX_ANGULAR_VELOCITY = 5.279; // rad/s
 
         // PathPlanner, TODO: remake PathPlanner constants
-        public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS = new com.pathplanner.lib.path.PathConstraints(
-                4.5, 3.0, Math.PI * 2, Math.PI * 2);
+      //  public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS = new com.pathplanner.lib.path.PathConstraints(
+       //         4.5, 3.0, Math.PI * 2, Math.PI * 2);
         public static final double TRANSLATION_KP = 4.5;
         public static final double ROTATION_KP = 1.0;
     }
@@ -157,21 +157,21 @@ public final class Constants {
         public static final double EXTENDER_KD = 0.025;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this
         public static final double EXTENDER_RATIO = 50.0 / 9.0; // 5.55 repeating
-        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 30;
-        public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 20;
+        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 25;
+        public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 15;
         public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI); // (pitch diameter of pinion * pi)
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // meters per second
 
-        public static final double STOWED_POSITION = 0.044; // Meters
+        public static final double STOWED_POSITION = 0.0125; // Meters
         public static final double DEPLOYED_POSITION = 0.29-.006; // Meters
         public static final double OSCILLATION_AMOUNT = .2; // Meters; how far it goes out
         public static final double OSCILLATION_DIFF = .1; // Meters; how much further it goes in
         // Roller motor constants
-        public static final double ROLLER_SPEED = 0.9;
+        public static final double ROLLER_SPEED = 0.625;//0.9;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
         public static final double ROLLER_GEAR_RATIO = 2.0;
-        public static final int ROLLER_STATOR_CURRENT_LIMIT = 40;
-        public static final int ROLLER_SUPPLY_CURRENT_LIMIT = 30;
+        public static final int ROLLER_STATOR_CURRENT_LIMIT = 30;
+        public static final int ROLLER_SUPPLY_CURRENT_LIMIT = 20;
     }
 
     public static class ShooterConstants {
@@ -202,23 +202,23 @@ public final class Constants {
         public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 40;
 
         public static final double SHOOTER_STOW = 12.0; // The angle at which the shooter is considered stowed
-        public static final double FLYWHEEL_RPM_ACCEPTABLE_ERROR = 25.0; // rpm
+        public static final double FLYWHEEL_RPM_ACCEPTABLE_ERROR = 40.0; // rpm
         public static final double VERTICAL_AIM_ACCEPTABLE_ERROR = .25; // degrees
 
         // TODO: Add an offset from the apriltag to the hub center = 0.60375 m
         public static final InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<>(
                 MathUtil::inverseInterpolate, FullShooterParams::interpolate);
         static {
-            SHOOTER_MAP.put(.259, new FullShooterParams(-1450.0, 12.0, 1.17));
-            SHOOTER_MAP.put(.61, new FullShooterParams(-1630.0, 13.0, 0.85));
-            SHOOTER_MAP.put(1.08, new FullShooterParams(-1850.0, 17.0, 0.93));
-            SHOOTER_MAP.put(1.56, new FullShooterParams(-2000.0, 20.0, 1.11));
-            SHOOTER_MAP.put(2.06, new FullShooterParams(-2100.0, 24.0, 0.98));
-            SHOOTER_MAP.put(2.52, new FullShooterParams(-2175.0, 25.0, 0.97));
-            SHOOTER_MAP.put(3.07, new FullShooterParams(-2200.0, 27.0, 0.93));
-            SHOOTER_MAP.put(3.58, new FullShooterParams(-2300.0, 30.0, 0.83));
-            SHOOTER_MAP.put(4.08, new FullShooterParams(-2400.0, 33.0, 1.145));
-            SHOOTER_MAP.put(5.02, new FullShooterParams(-2500.0, 34.0, 1.025));
+            SHOOTER_MAP.put(.259, new FullShooterParams(-1678.0, 14.0, 1.17));
+            SHOOTER_MAP.put(.61, new FullShooterParams(-1678.0, 14.0, 0.85));
+            SHOOTER_MAP.put(1.08, new FullShooterParams(-1678.0, 14.0, 0.93));
+            SHOOTER_MAP.put(1.56, new FullShooterParams(-1678.0, 14.0, 1.11));
+            SHOOTER_MAP.put(2.06, new FullShooterParams(-1678.0, 14.0, 0.98));
+            SHOOTER_MAP.put(2.52, new FullShooterParams(-1678.0, 14.0, 0.97));
+            SHOOTER_MAP.put(3.07, new FullShooterParams(-1678.0, 14.0, 0.93));
+            SHOOTER_MAP.put(3.58, new FullShooterParams(-1678.0, 14.0, 0.83));
+            SHOOTER_MAP.put(4.08, new FullShooterParams(-1678.0, 14.0, 1.145));
+            SHOOTER_MAP.put(5.02, new FullShooterParams(-1678.0, 14.0, 1.025));
 
         }
 

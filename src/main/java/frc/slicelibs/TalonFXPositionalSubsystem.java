@@ -5,11 +5,14 @@
 package frc.slicelibs;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.controls.CoastOut;
+import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 //import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -255,6 +258,18 @@ public class TalonFXPositionalSubsystem extends SubsystemBase {
      */
     public double getPositionTargetReference() {
         return positionTargetReference;
+    }
+
+    public void setBrakeMode(){
+        for(TalonFX mot : motors){
+            mot.setNeutralMode(NeutralModeValue.Brake);
+        }
+    }
+
+    public void setCoastMode(){
+        for(TalonFX mot : motors){
+            mot.setNeutralMode(NeutralModeValue.Coast);
+        }
     }
 
 }

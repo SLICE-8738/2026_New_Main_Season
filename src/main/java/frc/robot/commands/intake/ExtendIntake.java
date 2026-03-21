@@ -36,6 +36,9 @@ public class ExtendIntake extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_intake.setCoastMode();
+    m_intake.extendSetSpeed(0);
+    //m_intake.spinRoller(0);
     m_Timer.reset();
   }
 

@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Indexer;
@@ -53,7 +54,7 @@ public class AlignAndShoot extends Command {
         m_drivetrain = drivetrain;
         m_target = target;
         m_driverController = driverController;
-        addRequirements(m_shooter, m_indexer, m_drivetrain);
+        addRequirements(m_shooter, m_drivetrain);
     }
 
     @Override
@@ -75,30 +76,51 @@ public class AlignAndShoot extends Command {
         double dist = m_drivetrain.getDistanceTo(compensated);
         SmartDashboard.putNumber("Distance to hub: ", dist);
 
+        /* 
         if (!m_shooter.isTuningMode()) {
             m_shooter.calculateShot(dist, m_shooter.getHorizontalVelocity(dist, compensated));
         }
+        */
 
         // Driver controls translation, heading PID controls rotation
         double headingCorrection = m_drivetrain.getHeadingPIDOutput(compensated);
+        /*
         m_drivetrain.setControl(driveRequest
-                .withVelocityX(m_driverController.getLeftY() * MaxSpeed)
-                .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
+                .withVelocityX(m_driverController.getLeftY() * MaxSpeed * 0.6)
+                .withVelocityY(m_driverController.getLeftX() * MaxSpeed * 0.6)
                 .withRotationalRate(headingCorrection));
+        */
 
         m_shooter.spinFlywheels(m_shooter.getTargetVelocity());
         m_shooter.pivotShooter(m_shooter.getTargetPosition());
 
+        /* 
         if (m_drivetrain.atTargetHeading() && m_shooter.atTargetSpeed() && m_shooter.atTargetPosition()) {
             m_indexer.runStageOneMotor(Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED);
             m_indexer.runStageTwoMotor(Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED);
         } else {
             m_indexer.stopAll();
         }
+        */
     }
 
     @Override
     public void end(boolean interrupted) {
+
+        if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter"); //TODO figure this ou
+            if (limelightPose != null && limelightPose.tagCount > 0 ) {
+                m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+            }
+    
+        } else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-shooter");
+            if (limelightPose != null && limelightPose.tagCount > 0) {
+                m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+            }   
+            
+       }
+
         m_shooter.windDownFlywheels();
         m_shooter.pivotShooter(Constants.ShooterConstants.SHOOTER_STOW);
         m_indexer.stopAll();

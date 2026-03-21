@@ -26,7 +26,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
     private Follower rightFollowerRequest;
     private final VelocityVoltage flywheelVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
 
-    private boolean tuningMode = false;
+    private boolean tuningMode = true;
     private double tunedRPM = 3000.0;
     private double tunedHoodAngle = 20.0;
 
@@ -118,7 +118,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
         rightShooterMotor.stopMotor();
     }
 
-    public static double distanceFromHub() {
+    public double distanceFromHub() {
         double distance = -1;
         if (!LimelightHelpers.getTV("limelight-shooter")) {
             return distance; // Invalid distance

@@ -57,6 +57,7 @@ public class Intake extends TalonFXPositionalSubsystem {
     rotationMotor.setControl(rollerRequest.withOutput(speed));
   }
 
+
   public void stopRoller() {
     rotationMotor.stopMotor();
   }

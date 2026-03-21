@@ -15,13 +15,19 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -35,6 +41,7 @@ import frc.robot.commands.intake.Spintake;
 import frc.robot.commands.intake.Stoptake;
 
 import frc.robot.commands.shooter.AlignAndShoot;
+import frc.robot.commands.shooter.BasicShoot;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -75,15 +82,17 @@ public class RobotContainer {
     public final AlignAndShoot m_alignAndPassLeft;
     public final AlignAndShoot m_alignAndPassRight;
     public final Shoot m_shoot;
+    public final BasicShoot m_BasicShootHub;
 
     // Auto chooser
     // TODO figure the heckin pathplanner code
-    //private final SendableChooser<Command> autoChooser;
+  //  private final SendableChooser<Command> autoChooser;
 
     /* Triggers */
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
 
+    private Command autoCommand;
     // =====================
     // Generated Swerve Drivetrain Stuff
     // =====================
@@ -99,6 +108,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
 
     public RobotContainer() {
+
+        
         // ==========================
         // Subsystems
         // ==========================
@@ -107,9 +118,10 @@ public class RobotContainer {
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-        //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        //SmartDashboard.putData("Auto Mode", autoChooser);
-
+       /*
+       autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+       SmartDashboard.putData("Auto Mode", autoChooser);
+       */
         
 
         // ==========================
@@ -130,6 +142,7 @@ public class RobotContainer {
 
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
+        m_BasicShootHub = new BasicShoot(m_Shooter);
         m_alignAndShootHub = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.HUB, driverController);
         m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
         m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
@@ -144,7 +157,15 @@ public class RobotContainer {
       //  NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
         
+
+       // autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+       // SmartDashboard.putData("Auto Mode", autoChooser);
+
+        autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), new SequentialCommandGroup(new WaitCommand(6.7), new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+
         configureBindings();
+        
+       // CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     }
 
     private void configureBindings() {
@@ -160,10 +181,14 @@ public class RobotContainer {
 
         /* Shooter */
 
-        //Buttons.controller1_RightTrigger.whileTrue(m_Shoot);
-        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
-        Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
+        Buttons.controller1_XButton.whileTrue(m_shoot);
         Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
+        Buttons.controller1_RightTrigger.whileTrue(m_shoot);
+        Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
+        Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
+
+        //Buttons.controller1_XButton.whileTrue(m_BasicShootHub);
+        //Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED)));
 
 
         /* Intake */
@@ -175,7 +200,8 @@ public class RobotContainer {
         // ============
         // TODO fix and uncomment after testing
         //oscillateTrigger.whileTrue(m_OscillateIntake);
-        indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
+        // TODO fix and uncomment after testing
+        //indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
 
 
         // =====================
@@ -224,6 +250,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        return null;
+        //return autoChooser.getSelected();
+        return autoCommand;
     }
 }

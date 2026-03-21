@@ -39,12 +39,12 @@ public class Shoot extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double distance = m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
+    double distance = m_Shooter.distanceFromHub();//m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
     m_ShuffleboardDistance.setDouble(distance);
     double angle = m_ShuffleboardAngle.getDouble(12);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = m_ShuffleboardRPM.getDouble(0);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    double rps = m_ShuffleboardRPM.getDouble(-1200);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
     m_Shooter.pivotShooter(angle);
-    m_Shooter.spinFlywheels(-1.0 * rps);
+    m_Shooter.spinFlywheels(1.0 * rps); //TODO originally negative
   }
 
   // Called once the command ends or is interrupted.
