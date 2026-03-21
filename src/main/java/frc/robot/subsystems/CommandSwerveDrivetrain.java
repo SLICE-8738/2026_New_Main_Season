@@ -101,7 +101,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, modules);
-        //configureAutoBuilder();
+        configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -110,7 +110,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
             SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        //configureAutoBuilder();
+        configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -121,7 +121,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Matrix<N3, N1> visionStandardDeviation, SwerveModuleConstants<?, ?, ?>... modules) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation,
                 modules);
-        //configureAutoBuilder();
+        configureAutoBuilder();
         configHeadingPID();
         if (Utils.isSimulation())
             startSimThread();
@@ -239,10 +239,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double dist = getDistanceTo(realTarget);
         double tof = Constants.ShooterConstants.SHOOTER_MAP.get(dist).tof();
         ChassisSpeeds fieldSpeeds = getFieldRelativeSpeeds();
-        //return realTarget;
+        double compensationFactor = 0.7;
         return new Translation2d(
-                realTarget.getX() - fieldSpeeds.vxMetersPerSecond * tof, //TODO multiply by factor possibly
-                realTarget.getY() - fieldSpeeds.vyMetersPerSecond * tof);
+                realTarget.getX() - fieldSpeeds.vxMetersPerSecond * tof * compensationFactor,
+                realTarget.getY() - fieldSpeeds.vyMetersPerSecond * tof * compensationFactor);
         
     }
 
@@ -252,7 +252,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
      */
     public Rotation2d getTargetHeading(Translation2d target) {
         Translation2d robotPos = getPose().getTranslation();
-        return Rotation2d.fromRadians(0.5 * Math.atan2(
+        return Rotation2d.fromRadians(Math.atan2(
                 target.getY() - robotPos.getY(),
                 target.getX() - robotPos.getX()));
     }

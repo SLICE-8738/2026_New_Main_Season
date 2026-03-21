@@ -60,45 +60,6 @@ public class CTREConfigs {
         m_swerveTurnConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         m_swerveTurnConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
 
-
-        /*
-
-        WHY IS THIS HERE LOLLLL
-
-        //////////////////////////
-        /// Shooter Configs ////
-        //////////////////////////
-
-        var shooterPID = shooterConfigs.Slot0;
-        shooterPID.kP = Constants.ShooterConstants.FLYWHEEL_KP;
-        shooterPID.kI = Constants.ShooterConstants.FLYWHEEL_KI;
-        shooterPID.kD = Constants.ShooterConstants.FLYWHEEL_KD;
-        //shooterPID.kS =
-        //shooterPID.kV = 510; //TODO tune
-
-
-        var shooterRightPID = shooterConfigs.Slot0;
-        shooterRightPID.kP = Constants.ShooterConstants.FLYWHEEL_KP;
-        shooterRightPID.kI = Constants.ShooterConstants.FLYWHEEL_KI;
-        shooterRightPID.kD = Constants.ShooterConstants.FLYWHEEL_KD;
-
-        var shooterRight = shooterConfigs.MotorOutput;
-        shooterRight.Inverted = InvertedValue.Clockwise_Positive;
-
-        //////////////////////
-        /// Intake Configs ///
-        //////////////////////
-        
-        var intakePID = intakeConfigs.Slot0;
-        intakePID.kP = 0.2;
-        intakePID.kI = 0;
-        intakePID.kD = 0;
-
-        var intakeOutput = intakeConfigs.MotorOutput;
-        intakeOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-        */
-
     }
 
     private void configureShooter() {

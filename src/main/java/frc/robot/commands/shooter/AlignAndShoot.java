@@ -82,8 +82,8 @@ public class AlignAndShoot extends Command {
         // Driver controls translation, heading PID controls rotation
         double headingCorrection = m_drivetrain.getHeadingPIDOutput(compensated);
         m_drivetrain.setControl(driveRequest
-                .withVelocityX(m_driverController.getLeftY() * MaxSpeed)
-                .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
+                .withVelocityX(m_driverController.getLeftY() * MaxSpeed * 0.6)
+                .withVelocityY(m_driverController.getLeftX() * MaxSpeed * 0.6)
                 .withRotationalRate(headingCorrection));
 
         m_shooter.spinFlywheels(m_shooter.getTargetVelocity());
