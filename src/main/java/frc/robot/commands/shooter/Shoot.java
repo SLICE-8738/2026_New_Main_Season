@@ -27,7 +27,7 @@ public class Shoot extends Command {
     m_drivetrain = drivetrain;
     m_ShuffleboardTab = Shuffleboard.getTab("Shooter Tuning");
     m_ShuffleboardAngle = m_ShuffleboardTab.add("Angle: ", 12).getEntry();
-    m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", 0).getEntry();
+    m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", -1200).getEntry();
     m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0).getEntry();
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -41,10 +41,11 @@ public class Shoot extends Command {
   public void execute() {
     double distance = m_Shooter.distanceFromHub();//m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
     m_ShuffleboardDistance.setDouble(distance);
-    double angle = m_ShuffleboardAngle.getDouble(12);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = m_ShuffleboardRPM.getDouble(-1200);//Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    // TODO uncomment and recomment depending on which mode the shooter is in
+    double angle = /*m_ShuffleboardAngle.getDouble(12);*/ Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
+    double rps = /*m_ShuffleboardRPM.getDouble(-1200);*/  Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm();
     m_Shooter.pivotShooter(angle);
-    m_Shooter.spinFlywheels(1.0 * rps); //TODO originally negative
+    m_Shooter.spinFlywheels(-1.0 * rps); //TODO originally negative
   }
 
   // Called once the command ends or is interrupted.

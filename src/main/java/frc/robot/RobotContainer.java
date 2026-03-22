@@ -154,18 +154,20 @@ public class RobotContainer {
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
-      //  NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
+        //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
         
 
-       // autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-       // SmartDashboard.putData("Auto Mode", autoChooser);
+        //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        //SmartDashboard.putData("Auto Mode", autoChooser);
 
-        autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), new SequentialCommandGroup(new WaitCommand(6.7), new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+        autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
+            new SequentialCommandGroup(new WaitCommand(6.7),
+                new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
 
         configureBindings();
         
-       // CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+        //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     }
 
     private void configureBindings() {
@@ -181,15 +183,15 @@ public class RobotContainer {
 
         /* Shooter */
 
-        Buttons.controller1_XButton.whileTrue(m_shoot);
-        Buttons.controller1_YButton.whileTrue(m_spinStageTwo);
-        Buttons.controller1_RightTrigger.whileTrue(m_shoot);
+        //Buttons.controller1_XButton.whileTrue(m_shoot);
+        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo); //TODO idek whats going on with these indexers bro; probably shooter
+        Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).
+            alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED)));
+        Buttons.controller1_RightTrigger.whileTrue(m_shoot);//m_BasicShootHub);
         Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
         Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
 
         //Buttons.controller1_XButton.whileTrue(m_BasicShootHub);
-        //Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED)));
-
 
         /* Intake */
         Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand);

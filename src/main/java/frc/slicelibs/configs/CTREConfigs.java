@@ -18,6 +18,7 @@ public class CTREConfigs {
     public final CANcoderConfiguration swerveCANcoderConfig = new CANcoderConfiguration();
 
     public final TalonFXConfiguration shooterConfigs = new TalonFXConfiguration();
+    public final TalonFXConfiguration shooterFollowerConfigs = new TalonFXConfiguration();
     public final TalonFXConfiguration pivotConfigs = new TalonFXConfiguration();
 
     public final TalonFXConfiguration extenderConfigs = new TalonFXConfiguration();
@@ -113,6 +114,20 @@ public class CTREConfigs {
         shooterConfigs.CurrentLimits.SupplyCurrentLimit = Constants.ShooterConstants.FLYWHEEL_SUPPLY_CURRENT_LIMIT;
         shooterConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
         shooterConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        shooterConfigs.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        // Right Flywheel
+        shooterFollowerConfigs.Slot0.kP = Constants.ShooterConstants.FLYWHEEL_KP;
+        shooterFollowerConfigs.Slot0.kI = Constants.ShooterConstants.FLYWHEEL_KI;
+        shooterFollowerConfigs.Slot0.kD = Constants.ShooterConstants.FLYWHEEL_KD;
+        shooterFollowerConfigs.Slot0.kS = Constants.ShooterConstants.FLYWHEEL_KS;
+        shooterFollowerConfigs.Slot0.kV = Constants.ShooterConstants.FLYWHEEL_KV;
+        shooterFollowerConfigs.Feedback.SensorToMechanismRatio = Constants.ShooterConstants.FLYWHEEL_GEAR_RATIO;
+        shooterFollowerConfigs.CurrentLimits.StatorCurrentLimit = Constants.ShooterConstants.FLYWHEEL_STATOR_CURRENT_LIMIT;
+        shooterFollowerConfigs.CurrentLimits.SupplyCurrentLimit = Constants.ShooterConstants.FLYWHEEL_SUPPLY_CURRENT_LIMIT;
+        shooterFollowerConfigs.CurrentLimits.StatorCurrentLimitEnable = true;
+        shooterFollowerConfigs.CurrentLimits.SupplyCurrentLimitEnable = true;
+        shooterFollowerConfigs.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         // Pivot motor configurations
         pivotConfigs.Slot0.kP = Constants.ShooterConstants.AIM_KP;

@@ -2,7 +2,9 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -23,7 +25,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
 
     private final CommandSwerveDrivetrain m_drivetrain;
     private TalonFX leftShooterMotor, rightShooterMotor;
-    private Follower rightFollowerRequest;
+    private StrictFollower rightFollowerRequest;
     private final VelocityVoltage flywheelVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
 
     private boolean tuningMode = true;
@@ -57,9 +59,8 @@ public class Shooter extends TalonFXPositionalSubsystem {
         rightShooterMotor = new TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_MOTOR_ID);
 
         leftShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
-        rightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
-        rightFollowerRequest = new Follower(leftShooterMotor.getDeviceID(), MotorAlignmentValue.Opposed);
-
+        rightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterFollowerConfigs);
+        rightFollowerRequest = new StrictFollower(leftShooterMotor.getDeviceID());
         m_drivetrain = drivetrain;
     }
 
@@ -67,7 +68,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
         leftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM / 60.0));
         rightShooterMotor.setControl(rightFollowerRequest);
     }
-
+    
     public void pivotShooter(double angle) {
         setPosition(angle);
     }

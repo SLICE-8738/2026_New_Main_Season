@@ -57,7 +57,7 @@ public final class Constants {
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.8;
-        public static final double STAGE_TWO_INTAKE_SPEED = 0.8;
+        public static final double STAGE_TWO_INTAKE_SPEED = 1.0;
 
         public static final int INDEXER_STATOR_CURRENT_LIMIT = 40;
         public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 30;
@@ -167,7 +167,7 @@ public final class Constants {
         public static final double OSCILLATION_AMOUNT = .2; // Meters; how far it goes out
         public static final double OSCILLATION_DIFF = .1; // Meters; how much further it goes in
         // Roller motor constants
-        public static final double ROLLER_SPEED = 0.625;//0.9;
+        public static final double ROLLER_SPEED = 1.0;//0.625;//0.9;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
         public static final double ROLLER_GEAR_RATIO = 2.0;
         public static final int ROLLER_STATOR_CURRENT_LIMIT = 30;
@@ -182,8 +182,8 @@ public final class Constants {
 
         // TODO: tune PIDs
         public static final double FLYWHEEL_KP = 1.0;
-        public static final double FLYWHEEL_KI = 0.45;
-        public static final double FLYWHEEL_KD = 0.00005;
+        public static final double FLYWHEEL_KI =  0.45;
+        public static final double FLYWHEEL_KD = 0.02;
         public static final double FLYWHEEL_KS = 1.5;
         public static final double FLYWHEEL_KV = 0.12;
         public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 80;
