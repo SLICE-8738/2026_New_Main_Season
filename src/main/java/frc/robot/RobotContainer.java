@@ -71,7 +71,7 @@ public class RobotContainer {
     public final Spintake m_Spintake;
     public final Stoptake m_Stoptake;
     public final OscillateIntake m_OscillateIntake;
-    public final ConditionalCommand m_IntakeCommand;
+    public final ExtendIntake m_IntakeCommand;
 
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
@@ -93,6 +93,7 @@ public class RobotContainer {
     private Trigger indexerTrigger;
 
     private Command autoCommand;
+    //private Command lynkDESTROYER;
     // =====================
     // Generated Swerve Drivetrain Stuff
     // =====================
@@ -134,7 +135,7 @@ public class RobotContainer {
         m_Spintake        = new Spintake(m_Intake);
         m_OscillateIntake = new OscillateIntake(m_Intake);
         m_Stoptake        = new Stoptake(m_Intake);
-        m_IntakeCommand   = new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
+        m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
@@ -149,8 +150,9 @@ public class RobotContainer {
 
         /* Triggers */
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
-        indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed());
-        
+        //indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed());
+        indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
+
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
@@ -164,6 +166,12 @@ public class RobotContainer {
         autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
             new SequentialCommandGroup(new WaitCommand(6.7),
                 new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+
+        /*
+        lynkDESTROYER = new Command() {
+            
+        };
+        */
 
         configureBindings();
         
@@ -194,7 +202,8 @@ public class RobotContainer {
         //Buttons.controller1_XButton.whileTrue(m_BasicShootHub);
 
         /* Intake */
-        Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand);
+        
+        Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
         Buttons.controller1_AButton.onTrue(m_RetractIntake);
 
         // ============
@@ -204,7 +213,9 @@ public class RobotContainer {
         //oscillateTrigger.whileTrue(m_OscillateIntake);
         // TODO fix and uncomment after testing
         //indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
-
+        indexerTrigger.whileTrue(new WaitCommand(2).
+            andThen(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).
+                alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
 
         // =====================
         // Generated Swerve Drivetrain Stuff

@@ -57,10 +57,11 @@ public final class Constants {
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.8;
+        public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.5;
         public static final double STAGE_TWO_INTAKE_SPEED = 1.0;
 
-        public static final int INDEXER_STATOR_CURRENT_LIMIT = 40;
-        public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 30;
+        public static final int INDEXER_STATOR_CURRENT_LIMIT = 30;
+        public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 25;
     }
 
     public static class DriveConstants {
@@ -117,7 +118,7 @@ public final class Constants {
         public static final double TURN_KD = 0.0;
 
         /* Current Limits */
-        public static final double DRIVE_STATOR_CURRENT_LIMIT = 80;
+        public static final double DRIVE_STATOR_CURRENT_LIMIT = 70;
         public static final double DRIVE_SUPPLY_CURRENT_LIMIT = 40;
         public static final double TURN_STATOR_CURRENT_LIMIT = 40;
         public static final double TURN_SUPPLY_CURRENT_LIMIT = 30;
@@ -157,7 +158,7 @@ public final class Constants {
         public static final double EXTENDER_KD = 0.025;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this
         public static final double EXTENDER_RATIO = 50.0 / 9.0; // 5.55 repeating
-        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 25;
+        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 20;
         public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 15;
         public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI); // (pitch diameter of pinion * pi)
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // meters per second
@@ -186,8 +187,8 @@ public final class Constants {
         public static final double FLYWHEEL_KD = 0.02;
         public static final double FLYWHEEL_KS = 1.5;
         public static final double FLYWHEEL_KV = 0.12;
-        public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 80;
-        public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 60;
+        public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 60;
+        public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 40;
 
         public static final double FLYWHEEL_GEAR_RATIO = 1.4;
         public static final double PIVOT_GEAR_RATIO = 4.75 * 16.5;

@@ -16,7 +16,7 @@ public class ExtendIntake extends Command {
   public ExtendIntake (Intake intake) {
     m_intake = intake;
     m_Timer = new Timer();
-    addRequirements(m_intake);
+    //addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.
@@ -37,7 +37,7 @@ public class ExtendIntake extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intake.setCoastMode();
-    m_intake.extendSetSpeed(0);
+    m_intake.stopMotors();
     //m_intake.spinRoller(0);
     m_Timer.reset();
   }
@@ -45,7 +45,7 @@ public class ExtendIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_Timer.get() >= 3){
+    if(m_Timer.get() >= 3 || m_intake.isDeployed()){
       return true;
     }
     return false;

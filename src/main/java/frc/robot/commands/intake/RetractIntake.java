@@ -36,7 +36,7 @@ public class RetractIntake extends Command {
   @Override
   public void end(boolean interrupted) {
     m_intake.setBrakeMode();
-    m_intake.extendSetSpeed(0);
+    m_intake.stopMotors();
     m_Timer.start();
     m_Timer.reset();
    
@@ -45,7 +45,7 @@ public class RetractIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_Timer.get() >= 3){
+    if(m_Timer.get() >= 3 || m_intake.isStowed()){
       return true;
     }
     return false;

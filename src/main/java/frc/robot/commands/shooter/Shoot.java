@@ -30,6 +30,7 @@ public class Shoot extends Command {
     m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", -1200).getEntry();
     m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0).getEntry();
     // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_Shooter);
   }
 
   // Called when the command is initially scheduled.

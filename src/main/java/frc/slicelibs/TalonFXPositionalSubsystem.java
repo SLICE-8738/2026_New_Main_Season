@@ -124,6 +124,12 @@ public class TalonFXPositionalSubsystem extends SubsystemBase {
         }
     }
 
+    public void stopMotors(){
+        for (TalonFX motor : motors) {
+            motor.stopMotor();
+        }
+    }
+
     /**
      * Sets the target speed of the subsystem, which it will approach using its
      * internal PID controller.
