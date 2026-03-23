@@ -73,9 +73,13 @@ public class Intake extends TalonFXPositionalSubsystem {
     set(speed);
   }
   
-  public boolean isStowed() { return (getExtenderPosition() < .127); } //5" bumper tolerance
+  public boolean isStowed() { 
+    return (getExtenderPosition() < .127); // 5" bumper tolerance
+  } 
 
-  public boolean isDeployed() { return (getExtenderPosition() > Constants.IntakeConstants.DEPLOYED_POSITION - 0.0127); } // 0.5" tolerance
+  public boolean isDeployed() { 
+    return (getExtenderPosition() > Constants.IntakeConstants.DEPLOYED_POSITION - 0.0127); // 0.5" tolerance
+  } // 0.5" tolerance
 
   public double getExtenderPosition(){
     return getPositions()[0];

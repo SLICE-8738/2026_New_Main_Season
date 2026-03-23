@@ -32,14 +32,27 @@ public class Indexer extends SubsystemBase {
     
   }
 
+  /**
+   * This command runs the Stage One Motor at a set speed
+   * The Stage One Motor is the motor that initially moves the fuel into the Hopper after being intaken
+   * @param speed the speed to set the motor to (proportional supply voltage)
+   */
   public void runStageOneMotor(double speed) {
     stageOneMotor.setControl(indexerRequest.withOutput(speed));
   }
-   
+  
+  /**
+   * This command runs the Stage Two Motor at a set speed
+   * The Stage Two Motor is the motor that helps index the fuel inton the Shooter to be either passed or shoot at the Hub
+   * @param speed the speed to set the motor to (proportional supply voltage)
+   */
   public void runStageTwoMotor(double speed) {
     stageTwoMotor.setControl(indexerRequest.withOutput(speed));
   }
 
+  /**
+   * This method completely stops ALL motors until they are called again.
+   */
   public void stopAll(){
     stageOneMotor.stopMotor();
     stageTwoMotor.stopMotor();

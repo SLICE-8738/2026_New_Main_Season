@@ -56,6 +56,7 @@ public class RobotContainer {
     // ==========================
     // Subsystems
     // ==========================
+    public final CommandSwerveDrivetrain m_drivetrain;
 
     public final Intake m_Intake;
     public final Indexer m_Indexer;
@@ -86,14 +87,16 @@ public class RobotContainer {
 
     // Auto chooser
     // TODO figure the heckin pathplanner code
-  //  private final SendableChooser<Command> autoChooser;
+    // private final SendableChooser<Command> autoChooser;
 
     /* Triggers */
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
 
+    /* Other Commands */
     private Command autoCommand;
     //private Command lynkDESTROYER;
+
     // =====================
     // Generated Swerve Drivetrain Stuff
     // =====================
@@ -106,23 +109,21 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
-    public final CommandSwerveDrivetrain m_drivetrain = TunerConstants.createDrivetrain();
-
     public RobotContainer() {
 
-        
         // ==========================
         // Subsystems
         // ==========================
-        //m_drivetrain = TunerConstants.createDrivetrain();
+        m_drivetrain = TunerConstants.createDrivetrain();
         m_Intake = new Intake();
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
 
-       /*
-       autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-       SmartDashboard.putData("Auto Mode", autoChooser);
-       */
+        /*
+        TODO figure out this autochooser thing
+        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        SmartDashboard.putData("Auto Mode", autoChooser);
+        */
         
 
         // ==========================
@@ -135,6 +136,7 @@ public class RobotContainer {
         m_Spintake        = new Spintake(m_Intake);
         m_OscillateIntake = new OscillateIntake(m_Intake);
         m_Stoptake        = new Stoptake(m_Intake);
+        // Removed the conditional command because it is not working properly, and is overriding manual controls
         m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
         /* Indexer */
@@ -148,34 +150,44 @@ public class RobotContainer {
         m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
         m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
 
-        /* Triggers */
-        oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
-        //indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed());
-        indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
-
-        NamedCommands.registerCommand("Spin Intake", m_Spintake);
-        NamedCommands.registerCommand("Stop Intake", m_Stoptake);
-        NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
-        //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
-        NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
-        
-
-        //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        //SmartDashboard.putData("Auto Mode", autoChooser);
-
+        /* Autonomous */
         autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
             new SequentialCommandGroup(new WaitCommand(6.7),
                 new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
 
         /*
+        save this to build up for States 🤑 
         lynkDESTROYER = new Command() {
             
         };
         */
 
+        /*
+        TODO more auto stuff to figure the heck out of
+        NamedCommands.registerCommand("Spin Intake", m_Spintake);
+        NamedCommands.registerCommand("Stop Intake", m_Stoptake);
+        NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
+        //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
+        NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
+        */
+
+        //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
+
+        /* Triggers */
+        oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
+        // indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed()); This trigger currently does not work; there is some
+        // sort of error where the atTargetSpeed() method isn't returning the proper values
+        indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
+
+
+        /* Smart Dashboard */
+        //SmartDashboard.putData("Auto Mode", autoChooser);
+
+
+
         configureBindings();
         
-        //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
     }
 
     private void configureBindings() {
