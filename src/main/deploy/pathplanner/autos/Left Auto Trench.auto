@@ -5,59 +5,21 @@
     "data": {
       "commands": [
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Center Run"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Extend Intake"
-                }
-              }
-            ]
+            "pathName": "Left Center Run"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Center Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Spin Intake"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Stop Intake"
-                }
-              }
-            ]
+            "pathName": "Left Center Intake"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Left Return Trench"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Align & Shoot"
           }
         }
       ]

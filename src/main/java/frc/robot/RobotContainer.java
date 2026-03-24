@@ -87,15 +87,14 @@ public class RobotContainer {
 
     // Auto chooser
     // TODO figure the heckin pathplanner code
-    // private final SendableChooser<Command> autoChooser;
+    private final SendableChooser<Command> autoChooser;
 
     /* Triggers */
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
 
     /* Other Commands */
-    private Command autoCommand;
-    //private Command lynkDESTROYER;
+    //private Command autoCommand;
 
     // =====================
     // Generated Swerve Drivetrain Stuff
@@ -118,12 +117,7 @@ public class RobotContainer {
         m_Intake = new Intake();
         m_Indexer = new Indexer();
         m_Shooter = new Shooter(m_drivetrain);
-
-        /*
-        TODO figure out this autochooser thing
-        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        SmartDashboard.putData("Auto Mode", autoChooser);
-        */
+        
         
 
         // ==========================
@@ -151,28 +145,23 @@ public class RobotContainer {
         m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
 
         /* Autonomous */
-        autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
-            new SequentialCommandGroup(new WaitCommand(6.7),
-                new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
-
-        /*
-        save this to build up for States 🤑 
-        lynkDESTROYER = new Command() {
-            
-        };
-        */
+       // autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
+       //     new SequentialCommandGroup(new WaitCommand(6.7),
+        //        new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
 
         /*
         TODO more auto stuff to figure the heck out of
+        */
         NamedCommands.registerCommand("Spin Intake", m_Spintake);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
         //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
-        NamedCommands.registerCommand("Align & Shoot", m_alignAndShootHub);
-        */
+        NamedCommands.registerCommand("Shoot", m_BasicShootHub);
+        
+        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        SmartDashboard.putData("Auto Mode", autoChooser);
 
         //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        //CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
         /* Triggers */
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
@@ -184,6 +173,7 @@ public class RobotContainer {
         /* Smart Dashboard */
         //SmartDashboard.putData("Auto Mode", autoChooser);
 
+        CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
 
         configureBindings();
@@ -275,7 +265,7 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-        //return autoChooser.getSelected();
-        return autoCommand;
+        return autoChooser.getSelected();
+      //  return autoCommand;
     }
 }

@@ -92,12 +92,6 @@
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
       "command": null
-    },
-    {
-      "name": "Stop Intake",
-      "waypointRelativePos": 3.0,
-      "endWaypointRelativePos": null,
-      "command": null
     }
   ],
   "globalConstraints": {

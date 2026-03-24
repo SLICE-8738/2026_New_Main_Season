@@ -260,4 +260,15 @@ public final class Constants {
 
     }
 
+    public static class PathPlannerConstants {
+        public static final double TRACK_WIDTH = Units.inchesToMeters(22.0);
+        public static final double WHEEL_BASE = Units.inchesToMeters(23.1782);
+        public static final double DRIVE_BASE_RADIUS = Math.hypot(WHEEL_BASE / 2, TRACK_WIDTH / 2);
+        public static final double WHEEL_DIAMETER = Units.inchesToMeters(3.95);
+        public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+        public static final double MASS = 65; // TODO: Find mass (kg)
+        public static final double MOMENT_OF_INERTIA = 6; // TODO: Find MOI (kg*m^2)
+        public static final double WHEEL_COEFFICIENT_OF_FRICTION = 1.5;
+    }
+
 }
