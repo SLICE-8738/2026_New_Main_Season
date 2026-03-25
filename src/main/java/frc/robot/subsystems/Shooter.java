@@ -28,7 +28,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
     private StrictFollower rightFollowerRequest;
     private final VelocityVoltage flywheelVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
 
-    private boolean tuningMode = true;
+    private boolean tuningMode = false;
     private double tunedRPM = 3000.0;
     private double tunedHoodAngle = 20.0;
 
@@ -65,7 +65,7 @@ public class Shooter extends TalonFXPositionalSubsystem {
     }
 
     public void spinFlywheels(double targetRPM) {
-        leftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM / 60.0));
+        leftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM /*  / 60.0*/));
         rightShooterMotor.setControl(rightFollowerRequest);
     }
     

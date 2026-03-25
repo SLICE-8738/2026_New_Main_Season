@@ -44,7 +44,7 @@ public class Shoot extends Command {
     m_ShuffleboardDistance.setDouble(distance);
     // TODO uncomment and recomment depending on which mode the shooter is in
     double angle = /*m_ShuffleboardAngle.getDouble(12);*/ Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = /*m_ShuffleboardRPM.getDouble(-1200);*/  Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm();
+    double rps = /*m_ShuffleboardRPM.getDouble(-1200);*/  Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
     m_Shooter.pivotShooter(angle);
     m_Shooter.spinFlywheels(-1.0 * rps); //TODO originally negative
   }
