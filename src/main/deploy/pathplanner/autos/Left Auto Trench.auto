@@ -5,9 +5,22 @@
     "data": {
       "commands": [
         {
-          "type": "path",
+          "type": "sequential",
           "data": {
-            "pathName": "Left Center Run"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Left Center Run"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "Spin Intake"
+                }
+              }
+            ]
           }
         },
         {
@@ -17,9 +30,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Extend Intake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Left Return Trench"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

@@ -195,7 +195,8 @@ public final class Constants {
         public static final double POSITION_CONVERSION_FACTOR = 360; // Degrees
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // Degrees per Second
 
-        public static final double AIM_KP = 0.6;
+        //public static final double AIM_KP = 0.6;
+        public static final double AIM_KP = 0.8;
         public static final double AIM_KI = 0.0;
         public static final double AIM_KD = 0.0;
         public static final double AIM_KG = 0.01; // gravity feedforward
