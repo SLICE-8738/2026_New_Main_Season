@@ -152,11 +152,13 @@ public class RobotContainer {
         /*
         TODO more auto stuff to figure the heck out of
         */
-        NamedCommands.registerCommand("Spin Intake", m_Spintake);
+        NamedCommands.registerCommand("Intake", m_IntakeCommand);
+        NamedCommands.registerCommand("Spin Stage One", m_spinStageOne);
+        NamedCommands.registerCommand("Spin Stage Two", m_spinStageTwo);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
         //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
-        NamedCommands.registerCommand("Shoot", m_BasicShootHub);
+        NamedCommands.registerCommand("Shoot", m_shoot);
         
         autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
         SmartDashboard.putData("Auto Mode", autoChooser);

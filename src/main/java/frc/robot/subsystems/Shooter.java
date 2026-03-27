@@ -32,6 +32,9 @@ public class Shooter extends TalonFXPositionalSubsystem {
     private double tunedRPM = 3000.0;
     private double tunedHoodAngle = 20.0;
 
+    private static double goodAngle = 12.0;
+    private static double goodSpeed = 1200.0;
+
     private double targetSpeed, targetPosition;
 
     /**
@@ -71,6 +74,22 @@ public class Shooter extends TalonFXPositionalSubsystem {
     
     public void pivotShooter(double angle) {
         setPosition(angle);
+    }
+
+    public double getGoodAngle(){
+        return goodAngle;
+    }
+
+    public double getGoodSpeed(){
+        return goodSpeed;
+    }
+
+    public void setGoodAngle(double angle){
+        goodAngle = angle;
+    }
+
+    public void setGoodSpeed(double speed){
+        goodSpeed = speed;
     }
 
     /**

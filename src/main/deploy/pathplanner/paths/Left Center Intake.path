@@ -3,60 +3,60 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.9,
-        "y": 7.0
+        "x": 7.315044444444445,
+        "y": 6.071588888888889
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.897455786484557,
-        "y": 6.504112707978445
+        "x": 7.312500230929003,
+        "y": 5.575701596867334
       },
       "isLocked": true,
       "linkedName": "Center Run"
     },
     {
       "anchor": {
-        "x": 7.9,
-        "y": 4.895363475177305
+        "x": 7.422233333333334,
+        "y": 4.902255555555555
       },
       "prevControl": {
-        "x": 8.039287203062383,
-        "y": 5.222522877158871
+        "x": 7.561520536395716,
+        "y": 5.229414957537121
       },
       "nextControl": {
-        "x": 7.700445704750549,
-        "y": 4.426648026368812
+        "x": 7.222679038083882,
+        "y": 4.433540106747062
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.782455673758864,
-        "y": 4.565691489361702
+        "x": 6.593955555555556,
+        "y": 4.522222222222222
       },
       "prevControl": {
-        "x": 7.306704850582089,
-        "y": 4.430454373259191
+        "x": 7.11820473237878,
+        "y": 4.3869851061197105
       },
       "nextControl": {
-        "x": 6.540380423294172,
-        "y": 4.6281380514164425
+        "x": 6.351880305090863,
+        "y": 4.584668784276962
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.375,
-        "y": 5.5
+        "x": 6.896033333333334,
+        "y": 6.685488888888889
       },
       "prevControl": {
-        "x": 6.375,
-        "y": 5.077
+        "x": 6.896033333333334,
+        "y": 6.262488888888889
       },
       "nextControl": null,
-      "isLocked": true,
+      "isLocked": false,
       "linkedName": "Left Center Intake"
     }
   ],
@@ -91,12 +91,30 @@
       "name": "Spin Intake",
       "waypointRelativePos": 0,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Stage One"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "Spin Stage Two"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -112,5 +130,5 @@
     "velocity": 1.0,
     "rotation": -5.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -5,34 +5,15 @@
     "data": {
       "commands": [
         {
-          "type": "sequential",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Left Center Run"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "Spin Intake"
-                }
-              }
-            ]
+            "pathName": "Left Center Run"
           }
         },
         {
           "type": "path",
           "data": {
             "pathName": "Left Center Intake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Extend Intake"
           }
         },
         {
