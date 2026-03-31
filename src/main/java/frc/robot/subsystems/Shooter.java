@@ -54,9 +54,12 @@ public class Shooter extends SubsystemBase {
 
         bottomLeftShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
         bottomRightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterFollowerConfigs);
+        topRightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterFollowerConfigs);
+        topLeftShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
+
         bottomRightFollowerRequest = new StrictFollower(bottomLeftShooterMotor.getDeviceID());
-        topLeftFollowerRequest = new StrictFollower(topLeftShooterMotor.getDeviceID());
-        topRightFollowerRequest = new StrictFollower(topLeftShooterMotor.getDeviceID());
+        topLeftFollowerRequest = new StrictFollower(bottomLeftShooterMotor.getDeviceID());
+        topRightFollowerRequest = new StrictFollower(bottomLeftShooterMotor.getDeviceID());
         m_drivetrain = drivetrain;
     }
 

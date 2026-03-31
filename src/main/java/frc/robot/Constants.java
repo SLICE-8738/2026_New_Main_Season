@@ -192,7 +192,7 @@ public final class Constants {
         public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 60;
         public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 40;
 
-        public static final double FLYWHEEL_GEAR_RATIO = 1.4;
+        public static final double FLYWHEEL_GEAR_RATIO = 1;
         public static final double PIVOT_GEAR_RATIO = 4.75 * 16.5;
         public static final double POSITION_CONVERSION_FACTOR = 360; // Degrees
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // Degrees per Second
