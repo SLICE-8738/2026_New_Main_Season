@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
+import javax.xml.crypto.dsig.spec.C14NMethodParameterSpec;
+
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.StrictFollower;
@@ -16,76 +18,57 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.ShooterConstants.FullShooterParams;
 import frc.robot.LimelightHelpers;
 import frc.slicelibs.TalonFXPositionalSubsystem;
 
-public class Shooter extends TalonFXPositionalSubsystem {
+public class Shooter extends SubsystemBase {
 
     private final CommandSwerveDrivetrain m_drivetrain;
-    private TalonFX leftShooterMotor, rightShooterMotor;
-    private StrictFollower rightFollowerRequest;
+    private TalonFX bottomLeftShooterMotor, bottomRightShooterMotor, topLeftShooterMotor, topRightShooterMotor;
+    private StrictFollower bottomRightFollowerRequest;
+    private StrictFollower topLeftFollowerRequest;
+    private StrictFollower topRightFollowerRequest;
     private final VelocityVoltage flywheelVelocityRequest = new VelocityVoltage(0).withEnableFOC(true);
 
     private boolean tuningMode = false;
     private double tunedRPM = 3000.0;
-    private double tunedHoodAngle = 20.0;
 
-    private static double goodAngle = 12.0;
     private static double goodSpeed = 1200.0;
 
-    private double targetSpeed, targetPosition;
+    private double targetSpeed;
 
     /**
      * @param drivetrain required for field-relative velocity in SWIM calculations
      */
     public Shooter(CommandSwerveDrivetrain drivetrain) {
-        super(new int[] { Constants.ShooterConstants.PIVOT_MOTOR_ID },
-                new boolean[] { true },
-                Constants.ShooterConstants.AIM_KP,
-                Constants.ShooterConstants.AIM_KI,
-                Constants.ShooterConstants.AIM_KD,
-                Constants.ShooterConstants.AIM_KG,
-                Constants.ShooterConstants.PIVOT_GEAR_RATIO,
-                GravityTypeValue.Arm_Cosine,
-                Constants.ShooterConstants.POSITION_CONVERSION_FACTOR,
-                Constants.ShooterConstants.VELOCITY_CONVERSION_FACTOR,
-                Constants.CTRE_CONFIGS.pivotConfigs);
-        setEncoderPosition(Constants.ShooterConstants.SHOOTER_STOW);
-
         SmartDashboard.putBoolean("Shooter/TuningMode", false);
         SmartDashboard.putNumber("Shooter/TunedRPM", 3000.0);
-        SmartDashboard.putNumber("Shooter/TunedHoodAngle", 20.0);
 
-        leftShooterMotor = new TalonFX(Constants.ShooterConstants.LEFT_SHOOTER_MOTOR_ID);
-        rightShooterMotor = new TalonFX(Constants.ShooterConstants.RIGHT_SHOOTER_MOTOR_ID);
+        bottomLeftShooterMotor = new TalonFX(Constants.ShooterConstants.BOTTOM_LEFT_SHOOTER_MOTOR_ID);
+        bottomRightShooterMotor = new TalonFX(Constants.ShooterConstants.BOTTOM_RIGHT_SHOOTER_MOTOR_ID);
+        topLeftShooterMotor = new TalonFX(Constants.ShooterConstants.TOP_LEFT_SHOOTER_MOTOR_ID);
+        topRightShooterMotor = new TalonFX(Constants.ShooterConstants.TOP_RIGHT_SHOOTER_MOTOR_ID);
 
-        leftShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
-        rightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterFollowerConfigs);
-        rightFollowerRequest = new StrictFollower(leftShooterMotor.getDeviceID());
+        bottomLeftShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterConfigs);
+        bottomRightShooterMotor.getConfigurator().apply(Constants.CTRE_CONFIGS.shooterFollowerConfigs);
+        bottomRightFollowerRequest = new StrictFollower(bottomLeftShooterMotor.getDeviceID());
+        topLeftFollowerRequest = new StrictFollower(topLeftShooterMotor.getDeviceID());
+        topRightFollowerRequest = new StrictFollower(topLeftShooterMotor.getDeviceID());
         m_drivetrain = drivetrain;
     }
 
     public void spinFlywheels(double targetRPM) {
-        leftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM /*  / 60.0*/));
-        rightShooterMotor.setControl(rightFollowerRequest);
-    }
-    
-    public void pivotShooter(double angle) {
-        setPosition(angle);
-    }
-
-    public double getGoodAngle(){
-        return goodAngle;
+        bottomLeftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM /*  / 60.0*/));
+        bottomRightShooterMotor.setControl(bottomRightFollowerRequest);
+        topLeftShooterMotor.setControl(topLeftFollowerRequest);
+        topRightShooterMotor.setControl(topRightFollowerRequest);
     }
 
     public double getGoodSpeed(){
         return goodSpeed;
-    }
-
-    public void setGoodAngle(double angle){
-        goodAngle = angle;
     }
 
     public void setGoodSpeed(double speed){
@@ -126,16 +109,13 @@ public class Shooter extends TalonFXPositionalSubsystem {
         // Flywheel velocity
         double velocityRatio = MathUtil.clamp(requiredVelocity / baselineVelocity, 0.5, 2.0);
         targetSpeed = baseline.rpm() * velocityRatio;
-
-        // Hood angle
-        double totalVelocity = baselineVelocity / Math.cos(Math.toRadians(baseline.hoodAngle()));
-        double targetHoriz = MathUtil.clamp(requiredVelocity, 0.0, totalVelocity);
-        targetPosition = Math.toDegrees(Math.acos(targetHoriz / totalVelocity));
     }
 
     public void windDownFlywheels() {
-        leftShooterMotor.stopMotor();
-        rightShooterMotor.stopMotor();
+        bottomLeftShooterMotor.stopMotor();
+        bottomRightShooterMotor.stopMotor();
+        topLeftShooterMotor.stopMotor();
+        topRightShooterMotor.stopMotor();
     }
 
     public double distanceFromHub() {
@@ -153,29 +133,16 @@ public class Shooter extends TalonFXPositionalSubsystem {
     }
 
     public double getFlywheelSpeed() {
-        return (leftShooterMotor.getVelocity().getValueAsDouble() + rightShooterMotor.getVelocity().getValueAsDouble())
-                / 2 * 60.0;
-    }
-
-    public double getPivotPosition() {
-        return getPositions()[0];
+        return (bottomLeftShooterMotor.getVelocity().getValueAsDouble() + bottomRightShooterMotor.getVelocity().getValueAsDouble() + topLeftShooterMotor.getVelocity().getValueAsDouble() + topRightShooterMotor.getVelocity().getValueAsDouble())
+                / 4 * 60.0;
     }
 
     public double getTargetVelocity() {
         return targetSpeed;
     }
 
-    public double getTargetPosition() {
-        return targetPosition;
-    }
-
     public boolean atTargetSpeed() {
         return Math.abs(targetSpeed - getFlywheelSpeed()) <= Constants.ShooterConstants.FLYWHEEL_RPM_ACCEPTABLE_ERROR;
-    }
-
-    public boolean atTargetPosition() {
-        return Math.abs(targetPosition
-                - getPivotPosition()) <= (Constants.ShooterConstants.VERTICAL_AIM_ACCEPTABLE_ERROR * (Math.PI / 180));
     }
 
     public boolean isTuningMode() {
@@ -270,27 +237,19 @@ public class Shooter extends TalonFXPositionalSubsystem {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Shooter/ActualRPM", getFlywheelSpeed());
-        SmartDashboard.putNumber("Shooter/TargetRPM", targetSpeed);
-        SmartDashboard.putNumber("Shooter/TargetHoodAngle", targetPosition);
-        SmartDashboard.putNumber("Shooter/ActualHoodAngle", getPivotPosition());
         SmartDashboard.putBoolean("Shooter/AtSpeed", atTargetSpeed());
-        SmartDashboard.putBoolean("Shooter/AtPosition", atTargetPosition());
 
         tuningMode = SmartDashboard.getBoolean("Shooter/TuningMode", false);
         SmartDashboard.putBoolean("Shooter/TuningMode", tuningMode);
 
         SmartDashboard.putNumber("Shooter velocity: ", getFlywheelSpeed());
         SmartDashboard.putNumber("Shooter supposed velocity: ", targetSpeed);
-        SmartDashboard.putNumber("Shooter angle: ", getPivotPosition());
-        SmartDashboard.putNumber("Shooter supposed angle: ", targetPosition);
+
 
         if (tuningMode) {
             tunedRPM = SmartDashboard.getNumber("Shooter/TunedRPM", tunedRPM);
-            tunedHoodAngle = SmartDashboard.getNumber("Shooter/TunedHoodAngle", tunedHoodAngle);
             SmartDashboard.putNumber("Shooter/TunedRPM", tunedRPM);
-            SmartDashboard.putNumber("Shooter/TunedHoodAngle", tunedHoodAngle);
             targetSpeed = tunedRPM;
-            targetPosition = tunedHoodAngle;
         }
     }
 }

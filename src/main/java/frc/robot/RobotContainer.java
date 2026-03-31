@@ -39,7 +39,7 @@ import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.Spintake;
 import frc.robot.commands.intake.Stoptake;
-
+import frc.robot.commands.intake.TestExtendIntake;
 import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.BasicShoot;
 import frc.robot.commands.shooter.Shoot;
@@ -73,6 +73,8 @@ public class RobotContainer {
     public final Stoptake m_Stoptake;
     public final OscillateIntake m_OscillateIntake;
     public final ExtendIntake m_IntakeCommand;
+
+    public final TestExtendIntake m_TestExtendIntake;
 
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
@@ -108,6 +110,8 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
+    private ShuffleboardData m_ShuffleboardData;
+    
     public RobotContainer() {
 
         // ==========================
@@ -132,6 +136,8 @@ public class RobotContainer {
         m_Stoptake        = new Stoptake(m_Intake);
         // Removed the conditional command because it is not working properly, and is overriding manual controls
         m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
+
+        m_TestExtendIntake = new TestExtendIntake(m_Intake);
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
@@ -177,12 +183,15 @@ public class RobotContainer {
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
+        m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake);
 
         configureBindings();
         
     }
 
     private void configureBindings() {
+
+        //m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake);
 
         // ================
         // Driver Controls
@@ -203,12 +212,15 @@ public class RobotContainer {
         Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
         Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
 
-        //Buttons.controller1_XButton.whileTrue(m_BasicShootHub);
+        Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
 
         /* Intake */
         
         Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
         Buttons.controller1_AButton.onTrue(m_RetractIntake);
+        
+        Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
+
 
         // ============
         // Other Triggers
@@ -216,10 +228,11 @@ public class RobotContainer {
         // TODO fix and uncomment after testing
         //oscillateTrigger.whileTrue(m_OscillateIntake);
         // TODO fix and uncomment after testing
-        //indexerTrigger.whileTrue(m_spinStageOne.alongWith(m_spinStageTwo));
+        /*
         indexerTrigger.whileTrue(new WaitCommand(2).
             andThen(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).
                 alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+        */
 
         // =====================
         // Generated Swerve Drivetrain Stuff

@@ -92,7 +92,6 @@ public class AlignAndShoot extends Command {
         */
 
         m_shooter.spinFlywheels(m_shooter.getTargetVelocity());
-        m_shooter.pivotShooter(m_shooter.getTargetPosition());
 
         /* 
         if (m_drivetrain.atTargetHeading() && m_shooter.atTargetSpeed() && m_shooter.atTargetPosition()) {
@@ -122,7 +121,6 @@ public class AlignAndShoot extends Command {
        }
 
         m_shooter.windDownFlywheels();
-        m_shooter.pivotShooter(Constants.ShooterConstants.SHOOTER_STOW);
         m_indexer.stopAll();
     }
 

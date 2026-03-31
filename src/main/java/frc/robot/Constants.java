@@ -53,7 +53,7 @@ public final class Constants {
 
     public static class IndexerConstants {
         /* Indexer Motor IDs */
-        public static final int STAGE_ONE_MOTOR_ID = 18;
+        public static final int STAGE_ONE_MOTOR_ID = 7;
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.8;
@@ -83,21 +83,21 @@ public final class Constants {
                 new Translation2d(-WHEEL_BASE / 2.0, TRACK_WIDTH / 2.0)); // Back left
 
         /* Motor IDs */
-        public static final int FRONT_LEFT_DRIVE_ID = 17;
-        public static final int FRONT_RIGHT_DRIVE_ID = 13;
-        public static final int BACK_LEFT_DRIVE_ID = 15;
-        public static final int BACK_RIGHT_DRIVE_ID = 11;
+        public static final int FRONT_LEFT_DRIVE_ID = 15;
+        public static final int FRONT_RIGHT_DRIVE_ID = 17;
+        public static final int BACK_LEFT_DRIVE_ID = 11;
+        public static final int BACK_RIGHT_DRIVE_ID = 13;
 
-        public static final int FRONT_LEFT_TURN_ID = 16;
-        public static final int FRONT_RIGHT_TURN_ID = 12;
-        public static final int BACK_LEFT_TURN_ID = 14;
-        public static final int BACK_RIGHT_TURN_ID = 10;
+        public static final int FRONT_LEFT_TURN_ID = 18;
+        public static final int FRONT_RIGHT_TURN_ID = 16;
+        public static final int BACK_LEFT_TURN_ID = 10;
+        public static final int BACK_RIGHT_TURN_ID = 12;
 
         /* CANcoder IDs */
-        public static final int FRONT_LEFT_ENCODER_ID = 23;
-        public static final int FRONT_RIGHT_ENCODER_ID = 21;
-        public static final int BACK_LEFT_ENCODER_ID = 20;
-        public static final int BACK_RIGHT_ENCODER_ID = 22;
+        public static final int FRONT_LEFT_ENCODER_ID = 20;
+        public static final int FRONT_RIGHT_ENCODER_ID = 23;
+        public static final int BACK_LEFT_ENCODER_ID = 22;  
+        public static final int BACK_RIGHT_ENCODER_ID = 21;
 
         public static final int GYRO_ID = 24;
 
@@ -177,9 +177,11 @@ public final class Constants {
 
     public static class ShooterConstants {
 
-        public static final int PIVOT_MOTOR_ID = 4;
-        public static final int LEFT_SHOOTER_MOTOR_ID = 3;
-        public static final int RIGHT_SHOOTER_MOTOR_ID = 2;
+        public static final int BOTTOM_LEFT_SHOOTER_MOTOR_ID = 14;
+        public static final int BOTTOM_RIGHT_SHOOTER_MOTOR_ID = 2;
+        public static final int TOP_LEFT_SHOOTER_MOTOR_ID = 25;
+        public static final int TOP_RIGHT_SHOOTER_MOTOR_ID = 3;
+
 
         // TODO: tune PIDs
         public static final double FLYWHEEL_KP = 1.0;

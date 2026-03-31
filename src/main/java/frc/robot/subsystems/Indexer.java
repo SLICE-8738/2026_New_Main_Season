@@ -38,7 +38,7 @@ public class Indexer extends SubsystemBase {
    * @param speed the speed to set the motor to (proportional supply voltage)
    */
   public void runStageOneMotor(double speed) {
-    stageOneMotor.setControl(indexerRequest.withOutput(speed));
+    stageOneMotor.setControl(indexerRequest.withOutput(-speed));
   }
   
   /**
@@ -47,7 +47,7 @@ public class Indexer extends SubsystemBase {
    * @param speed the speed to set the motor to (proportional supply voltage)
    */
   public void runStageTwoMotor(double speed) {
-    stageTwoMotor.setControl(indexerRequest.withOutput(speed));
+    stageTwoMotor.setControl(indexerRequest.withOutput(-speed));
   }
 
   /**

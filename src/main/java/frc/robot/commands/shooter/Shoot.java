@@ -48,13 +48,10 @@ public class Shoot extends Command {
     //double angle = m_ShuffleboardAngle.getDouble(12);
     //double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
     if (distance == -1) {
-      m_Shooter.pivotShooter(m_Shooter.getGoodAngle());
-      m_Shooter.spinFlywheels(m_Shooter.getGoodSpeed());
+      m_Shooter.spinFlywheels(-m_Shooter.getGoodSpeed());
     }
     else {
-      m_Shooter.setGoodAngle(angle);
       m_Shooter.setGoodSpeed(rps);
-      m_Shooter.pivotShooter(angle);
       m_Shooter.spinFlywheels(rps); //TODO originally negative
     }
     
