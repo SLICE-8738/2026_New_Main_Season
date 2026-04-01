@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.Indexer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SpinStageTwo extends Command {
+public class SpinStageTwoManual extends Command {
   /** Creates a new SpinStageTwo. */
   private Indexer m_Indexer;
   private double speed;
-  public SpinStageTwo(Indexer m_Indexer, double speed) {
+  public SpinStageTwoManual(Indexer m_Indexer, double speed) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_Indexer = m_Indexer;
     this.speed = speed;
@@ -38,6 +38,6 @@ public class SpinStageTwo extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return true;
+    return false;
   }
 }

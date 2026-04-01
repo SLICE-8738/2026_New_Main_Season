@@ -38,7 +38,6 @@ public class ExtendIntake extends Command {
   public void end(boolean interrupted) {
     m_intake.setCoastMode();
     m_intake.stopMotors();
-    //m_intake.spinRoller(0);
     m_Timer.reset();
   }
 

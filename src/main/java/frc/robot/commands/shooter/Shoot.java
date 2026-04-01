@@ -26,7 +26,7 @@ public class Shoot extends Command {
     m_Shooter = shooter;
     m_drivetrain = drivetrain;
     m_ShuffleboardTab = Shuffleboard.getTab("Shooter Tuning");
-    m_ShuffleboardAngle = m_ShuffleboardTab.add("Angle: ", 12).getEntry();
+    m_ShuffleboardAngle = m_ShuffleboardTab.add("Angle: ", 28).getEntry();
     m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", -1200).getEntry();
     m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0).getEntry();
     // Use addRequirements() here to declare subsystem dependencies.
@@ -43,8 +43,8 @@ public class Shoot extends Command {
     double distance = m_Shooter.distanceFromHub();//m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
     m_ShuffleboardDistance.setDouble(distance);
     // TODO uncomment and recomment depending on which mode the shooter is in
-    double angle = /*m_ShuffleboardAngle.getDouble(12);*/ Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = /*m_ShuffleboardRPM.getDouble(-1200);*/  Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    double angle = 28; //Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
+    double rps = m_ShuffleboardRPM.getDouble(-1200);  //Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
     //double angle = m_ShuffleboardAngle.getDouble(12);
     //double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
     if (distance == -1) {

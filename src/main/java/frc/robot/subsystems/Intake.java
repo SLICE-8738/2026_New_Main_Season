@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -41,6 +42,7 @@ public class Intake extends TalonFXPositionalSubsystem {
     );
     setEncoderPosition(0);
     
+
     // Non-positional motor for spinning the roller
     rotationMotor = new TalonFX(Constants.IntakeConstants.ROTATION_MOTOR_ID);
 
@@ -87,7 +89,6 @@ public class Intake extends TalonFXPositionalSubsystem {
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Intake extender position: ", getExtenderPosition());
     // This method will be called once per scheduler run
   }
 }

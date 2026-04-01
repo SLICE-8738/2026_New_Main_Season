@@ -14,10 +14,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class RetractIntake extends Command {
 
   private Intake m_intake;
-  private Timer m_Timer;
 
   private ShuffleboardTab m_ShuffleboardTab;
   private SimpleWidget m_TimerEntry;
+
+  private Timer m_Timer;
 
   /**
    * Creates a new intake.
@@ -34,7 +35,6 @@ public class RetractIntake extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_Timer.reset();
     m_Timer.start();
     m_intake.setPosition(Constants.IntakeConstants.STOWED_POSITION);
     m_intake.stopRoller();
@@ -44,17 +44,15 @@ public class RetractIntake extends Command {
   @Override
   public void execute() {
     m_TimerEntry.getEntry().setDouble(m_Timer.get());
-  
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    m_Timer.stop();
+    m_Timer.reset();
     m_intake.setBrakeMode();
     m_intake.stopMotors();
-    m_Timer.start();
-    m_Timer.reset();
-   
   }
 
   // Returns true when the command should end.

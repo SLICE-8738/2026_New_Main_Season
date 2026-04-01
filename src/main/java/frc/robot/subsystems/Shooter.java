@@ -123,10 +123,10 @@ public class Shooter extends SubsystemBase {
 
     public double distanceFromHub() {
         double distance = -1;
-        if (!LimelightHelpers.getTV("limelight-shooter")) {
+        if (!LimelightHelpers.getTV("limelight-higher")) {
             return distance; // Invalid distance
         }
-        double offsetAngleVertical = LimelightHelpers.getTY("limelight-shooter");
+        double offsetAngleVertical = LimelightHelpers.getTY("limelight-higher");
         double angleToGoal = Math.toRadians(Constants.ShooterConstants.LIMELIGHT_ANGLE + offsetAngleVertical);
 
         distance = (Constants.FieldConstants.HUB_APRILTAG_HEIGHT - Constants.ShooterConstants.LIMELIGHT_HEIGHT)

@@ -16,7 +16,7 @@ public class Stoptake extends Command {
    */
   public Stoptake(Intake intake) {
     m_intake = intake;
-    addRequirements(m_intake);
+    //addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.

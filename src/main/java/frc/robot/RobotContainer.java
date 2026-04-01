@@ -32,8 +32,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.indexer.SpinStageOne;
+import frc.robot.commands.indexer.SpinStageOneManual;
 import frc.robot.commands.indexer.SpinStageTwo;
-
+import frc.robot.commands.indexer.SpinStageTwoManual;
 import frc.robot.commands.intake.OscillateIntake;
 import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.RetractIntake;
@@ -79,6 +80,7 @@ public class RobotContainer {
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
     public final SpinStageTwo m_spinStageTwo;
+    public final SpinStageOne m_stopStageOne;
 
     /* Shooter */
     public final AlignAndShoot m_alignAndShootHub;
@@ -142,6 +144,7 @@ public class RobotContainer {
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
         m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
+        m_stopStageOne = new SpinStageOne(m_Indexer, 0);
 
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
@@ -183,7 +186,7 @@ public class RobotContainer {
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
-        m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake);
+        m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake, m_Shooter);
 
         configureBindings();
         
@@ -191,7 +194,6 @@ public class RobotContainer {
 
     private void configureBindings() {
 
-        //m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake);
 
         // ================
         // Driver Controls
@@ -206,19 +208,17 @@ public class RobotContainer {
 
         //Buttons.controller1_XButton.whileTrue(m_shoot);
         //Buttons.controller1_YButton.whileTrue(m_spinStageTwo); //TODO idek whats going on with these indexers bro; probably shooter
-        Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED).
-            alongWith(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED)));
         Buttons.controller1_RightTrigger.whileTrue(m_shoot);//m_BasicShootHub);
         Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
         Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
 
-        Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
-
         /* Intake */
         
-        Buttons.controller1_LeftTrigger.onTrue(m_IntakeCommand.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
-        Buttons.controller1_AButton.onTrue(m_RetractIntake);
+        Buttons.controller1_LeftTrigger.onTrue(m_ExtendIntake.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
+        Buttons.controller1_AButton.onTrue(new SequentialCommandGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
+        Buttons.controller1_YButton.whileTrue(new SpinStageOneManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
+        Buttons.controller1_BButton.whileTrue(new SpinStageTwoManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
         Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
 
 

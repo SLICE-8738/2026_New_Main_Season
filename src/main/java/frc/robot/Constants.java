@@ -213,14 +213,14 @@ public final class Constants {
         public static final InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<>(
                 MathUtil::inverseInterpolate, FullShooterParams::interpolate);
         static {
-            SHOOTER_MAP.put(0.510, new FullShooterParams(1450.0, 12.0, 1.17));
-            SHOOTER_MAP.put(1.000, new FullShooterParams(1800.0, 13.0, 0.85));
-            SHOOTER_MAP.put(1.510, new FullShooterParams(1850.0, 14.0, 0.93));
-            SHOOTER_MAP.put(2.000, new FullShooterParams(2150.0, 16.5, 1.11));
-            SHOOTER_MAP.put(2.475, new FullShooterParams(1950.0, 21.0, 0.98));
-            SHOOTER_MAP.put(3.065, new FullShooterParams(2225.0, 23.0, 0.97));
-            SHOOTER_MAP.put(4.000, new FullShooterParams(2250.0, 28.0, 0.93));
-            SHOOTER_MAP.put(4.480, new FullShooterParams(2400.0, 29.0, 0.83));
+            SHOOTER_MAP.put(0.510 -1.5, new FullShooterParams(1450.0, 12.0, 1.17));
+            SHOOTER_MAP.put(1.000 -1.5, new FullShooterParams(1800.0, 13.0, 0.85));
+            SHOOTER_MAP.put(1.510 -1.5, new FullShooterParams(1850.0, 14.0, 0.93));
+            SHOOTER_MAP.put(2.000 -1.5, new FullShooterParams(2150.0, 16.5, 1.11));
+            SHOOTER_MAP.put(2.475 -1.5, new FullShooterParams(1950.0, 21.0, 0.98));
+            SHOOTER_MAP.put(3.065 -1.5, new FullShooterParams(2225.0, 23.0, 0.97));
+            SHOOTER_MAP.put(4.000 -1.5, new FullShooterParams(2250.0, 28.0, 0.93));
+            SHOOTER_MAP.put(4.480 -1.5, new FullShooterParams(2400.0, 29.0, 0.83));
             //SHOOTER_MAP.put(4.08, new FullShooterParams(-2400.0, 33.0, 1.145));
             //SHOOTER_MAP.put(5.02, new FullShooterParams(-2500.0, 34.0, 1.025));
 
