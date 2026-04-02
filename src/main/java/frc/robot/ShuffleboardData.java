@@ -2,11 +2,15 @@ package frc.robot;
 
 import java.util.Map;
 
+import edu.wpi.first.hal.DriverStationJNI;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
+import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Intake;
@@ -19,6 +23,16 @@ public class ShuffleboardData extends SubsystemBase {
     
     ShuffleboardTab driverTab, autoTab, debugTab, shooterTuning;
 
+    ///////////////////////////
+    /// Driver Tab Values //////
+    ///////////////////////////
+
+    //SimpleWidget batteryVoltage;
+
+    ///////////////////////////
+    /// Debug Tab Values //////
+    ///////////////////////////
+
     /* Intake Widgets */
     SimpleWidget intakeAtStow;
     SimpleWidget intakeAtDeploy;
@@ -27,6 +41,7 @@ public class ShuffleboardData extends SubsystemBase {
 
     /* Shooter Widgets */
     SimpleWidget shooterRPM;
+
 
     public ShuffleboardData(CommandSwerveDrivetrain m_CommandSwerveDrivetrain, Intake m_Intake, Shooter m_Shooter){
         
@@ -41,25 +56,29 @@ public class ShuffleboardData extends SubsystemBase {
         ///////////////////////////
         /// Driver Tab Values /////
         ///////////////////////////
+        
+        //batteryVoltage = driverTab.add("Battery Voltage", );
 
-        intakeAtStow = driverTab.add("Intake At Stow", m_Intake.isStowed())
+        ///////////////////////////
+        /// Debug Tab Values //////
+        ///////////////////////////
+
+        intakeAtStow = debugTab.add("Intake At Stow", m_Intake.isStowed())
             .withWidget(BuiltInWidgets.kBooleanBox);
-        intakeAtDeploy = driverTab.add("Intake At Deploy", m_Intake.isDeployed())
+        intakeAtDeploy = debugTab.add("Intake At Deploy", m_Intake.isDeployed())
             .withWidget(BuiltInWidgets.kBooleanBox);
-        intakeExtendPosition = driverTab.add("Intake Extension Position", m_Intake.getExtenderPosition());
-        intakeRunning = driverTab.add("Intake Runs Command", m_Intake.getCurrentCommand() != null)
+        intakeExtendPosition = debugTab.add("Intake Extension Position", m_Intake.getExtenderPosition());
+        intakeRunning = debugTab.add("Intake Runs Command", m_Intake.getCurrentCommand() != null)
             .withWidget(BuiltInWidgets.kBooleanBox);
         
         
 
-        driverTab.addCamera("Lower Camera", "limelight-shooter", "http://10.87.38.201");
-        driverTab.addCamera("Upper Camera", "limelight-higher", "http://10.87.38.202");
-        /*
-        driverTab.add(m_CommandSwerveDrivetrain.m_Field).
-        withWidget(BuiltInWidgets.kField).
-        withPosition(5, 5).
-        withSize(4, 3);
-        */
+        
+
+        ///////////////////////////
+        /// Shooter Tab Values //////
+        ///////////////////////////
+
 
         shooterRPM = shooterTuning.add("Shooter RPM", m_Shooter.getFlywheelSpeed());
 

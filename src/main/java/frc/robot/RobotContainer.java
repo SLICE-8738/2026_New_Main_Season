@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
+import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageOneManual;
 import frc.robot.commands.indexer.SpinStageTwo;
@@ -67,6 +68,9 @@ public class RobotContainer {
     // Commands
     // ==========================
 
+    /* Driving */
+    public final AutoAlign m_AutoAlignHub;
+
     /* Intake */
     public final ExtendIntake m_ExtendIntake;
     public final RetractIntake m_RetractIntake;
@@ -83,9 +87,12 @@ public class RobotContainer {
     public final SpinStageOne m_stopStageOne;
 
     /* Shooter */
+    
+    //Probably not going to be utilizing Jimits AlignAndShoot command from here on out
     public final AlignAndShoot m_alignAndShootHub;
-    public final AlignAndShoot m_alignAndPassLeft;
-    public final AlignAndShoot m_alignAndPassRight;
+    //public final AlignAndShoot m_alignAndPassLeft;
+    //public final AlignAndShoot m_alignAndPassRight;
+    // */
     public final Shoot m_shoot;
     public final BasicShoot m_BasicShootHub;
 
@@ -130,6 +137,9 @@ public class RobotContainer {
         // Commands
         // ==========================
 
+        /* Drive */
+        m_AutoAlignHub = new AutoAlign(m_drivetrain, AutoAlign.Target.HUB, driverController);
+
         /* Intake */
         m_ExtendIntake    = new ExtendIntake(m_Intake);
         m_RetractIntake   = new RetractIntake(m_Intake);
@@ -149,14 +159,21 @@ public class RobotContainer {
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
         m_BasicShootHub = new BasicShoot(m_Shooter);
+        
+        //* Probably not going to be utilizing Jimits AlignAndShoot command from here on out
+        
         m_alignAndShootHub = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.HUB, driverController);
-        m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
-        m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
+        //m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
+        //m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
+        // */
 
         /* Autonomous */
-       // autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
-       //     new SequentialCommandGroup(new WaitCommand(6.7),
-        //        new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+
+        /*
+         * autoCommand = new ParallelCommandGroup(new BasicShoot(m_Shooter), 
+         *    new SequentialCommandGroup(new WaitCommand(6.7),
+         *         new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
+        */
 
         /*
         TODO more auto stuff to figure the heck out of
@@ -200,23 +217,30 @@ public class RobotContainer {
         // ================
 
         /* Drivetrain */
+        Buttons.controller1_leftBumper.whileTrue(m_AutoAlignHub);
 
         // Reset the field-centric heading on minus press.
         Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
 
         /* Shooter */
 
-        //Buttons.controller1_XButton.whileTrue(m_shoot);
-        //Buttons.controller1_YButton.whileTrue(m_spinStageTwo); //TODO idek whats going on with these indexers bro; probably shooter
+        /*
+        TODO please please please fix the shooter so we can uncomment this code, Harrissh
         Buttons.controller1_RightTrigger.whileTrue(m_shoot);//m_BasicShootHub);
         Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
         Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
+        Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
+        */
+        Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub);
 
+        
         /* Intake */
         
         Buttons.controller1_LeftTrigger.onTrue(m_ExtendIntake.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
         Buttons.controller1_AButton.onTrue(new SequentialCommandGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
+        /* Indexer */
+
         Buttons.controller1_YButton.whileTrue(new SpinStageOneManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
         Buttons.controller1_BButton.whileTrue(new SpinStageTwoManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
         Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
@@ -225,6 +249,8 @@ public class RobotContainer {
         // ============
         // Other Triggers
         // ============
+
+
         // TODO fix and uncomment after testing
         //oscillateTrigger.whileTrue(m_OscillateIntake);
         // TODO fix and uncomment after testing
@@ -258,7 +284,7 @@ public class RobotContainer {
 
 
         /* 
-         * THIS IS FOR SYSID TESTING
+        // TODO THIS IS FOR SYSID TESTING
 
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain.applyRequest(() ->

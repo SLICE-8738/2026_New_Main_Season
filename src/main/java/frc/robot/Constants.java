@@ -37,8 +37,12 @@ public final class Constants {
     }
 
     public final class AlignTargets {
+        /*
         public static final Translation2d BLUE_HUB = new Translation2d(4.625, 4.034);
         public static final Translation2d RED_HUB = new Translation2d(11.915, 4.034);
+        */
+        public static final Translation2d RED_HUB = new Translation2d(4.625, 4.034);
+        public static final Translation2d BLUE_HUB = new Translation2d(11.915, 4.034);
 
         public static final Translation2d BLUE_PASS_LEFT = new Translation2d(3.0, 6.5);
         public static final Translation2d BLUE_PASS_RIGHT = new Translation2d(3.0, 1.5);
@@ -153,7 +157,7 @@ public final class Constants {
         public static final int EXTENDER_MOTOR_ID = 5;
 
         // Positional subsystem constants
-        public static final double EXTENDER_KP = 2.5;
+        public static final double EXTENDER_KP = 1.25;//2.5;
         public static final double EXTENDER_KI = 0;
         public static final double EXTENDER_KD = 0.025;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this

@@ -44,8 +44,8 @@ public class Shooter extends SubsystemBase {
      * @param drivetrain required for field-relative velocity in SWIM calculations
      */
     public Shooter(CommandSwerveDrivetrain drivetrain) {
-        SmartDashboard.putBoolean("Shooter/TuningMode", false);
-        SmartDashboard.putNumber("Shooter/TunedRPM", 3000.0);
+        //SmartDashboard.putBoolean("Shooter/TuningMode", false);
+        //SmartDashboard.putNumber("Shooter/TunedRPM", 3000.0);
 
         bottomLeftShooterMotor = new TalonFX(Constants.ShooterConstants.BOTTOM_LEFT_SHOOTER_MOTOR_ID);
         bottomRightShooterMotor = new TalonFX(Constants.ShooterConstants.BOTTOM_RIGHT_SHOOTER_MOTOR_ID);
@@ -64,7 +64,7 @@ public class Shooter extends SubsystemBase {
     }
 
     public void spinFlywheels(double targetRPM) {
-        bottomLeftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM /*  / 60.0*/));
+        bottomLeftShooterMotor.setControl(flywheelVelocityRequest.withVelocity(targetRPM   / 60.0));
         bottomRightShooterMotor.setControl(bottomRightFollowerRequest);
         topLeftShooterMotor.setControl(topLeftFollowerRequest);
         topRightShooterMotor.setControl(topRightFollowerRequest);
@@ -249,10 +249,11 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("Shooter supposed velocity: ", targetSpeed);
 
 
-        if (tuningMode) {
-            tunedRPM = SmartDashboard.getNumber("Shooter/TunedRPM", tunedRPM);
-            SmartDashboard.putNumber("Shooter/TunedRPM", tunedRPM);
-            targetSpeed = tunedRPM;
-        }
+
+        // if (tuningMode) {
+        //     tunedRPM = SmartDashboard.getNumber("Shooter/TunedRPM", tunedRPM);
+        //     SmartDashboard.putNumber("Shooter/TunedRPM", tunedRPM);
+        //     targetSpeed = tunedRPM;
+        // }
     }
 }

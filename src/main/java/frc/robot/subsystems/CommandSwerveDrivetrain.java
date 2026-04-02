@@ -28,8 +28,11 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.ComplexWidget;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.shuffleboard.SimpleWidget;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -103,6 +106,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     
     /* ShuffleBoard Stuffs */
     ShuffleboardTab driverTab;
+    ComplexWidget fieldWidget;
     public Field2d m_Field;
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
@@ -115,6 +119,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         m_Field = new Field2d();
         driverTab = Shuffleboard.getTab("Driver");
+        fieldWidget = driverTab.add("Field", m_Field)
+            .withWidget(BuiltInWidgets.kField);
 
         //m_Pigeon2 = new Pigeon2(Constants.)
         /* 
@@ -136,6 +142,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         
         m_Field = new Field2d();
         //driverTab = Shuffleboard.getTab("Driver"); TODO i dont think we need this but we'll see
+        fieldWidget = driverTab.add("Field", m_Field)
+            .withWidget(BuiltInWidgets.kField);
 
         /* 
         if(DriverStation.getAlliance().get() == Alliance.Blue){
@@ -158,6 +166,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         m_Field = new Field2d();
         //driverTab = Shuffleboard.getTab("Driver");
+        fieldWidget = driverTab.add("Field", m_Field)
+            .withWidget(BuiltInWidgets.kField);
 
         /* 
         if(DriverStation.getAlliance().get() == Alliance.Blue){
@@ -360,26 +370,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         m_Field.setRobotPose(getState().Pose);
-        SmartDashboard.putData("Pose", m_Field);
+        
+        //Shuffleboard.getTab("Driver").add("The field", m_Field);
         
 
         // Vision update with MegaTag2 if tags visible
         
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
-            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-shooter"); //TODO figure this ou
-            /*
-            if (limelightPose != null && limelightPose.tagCount > 0 && ) {
-            addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
+            
+            if (limelightPose != null && limelightPose.tagCount > 0 ) {
+                addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }
-            */
+            
         } else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
             //LimelightHelpers.SetRobotOrientation("limelight-shooter", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
-            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-shooter");
-            /*
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-trench");
+            
             if (limelightPose != null && limelightPose.tagCount > 0) {
-            addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+                addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }   
-            */
+            
 
         
         

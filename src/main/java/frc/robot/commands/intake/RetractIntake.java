@@ -58,7 +58,7 @@ public class RetractIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_Timer.get() >= 3 || m_intake.isStowed()){
+    if(m_Timer.get() >= 1.5 || m_intake.isStowed()){
       return true;
     }
     return false;

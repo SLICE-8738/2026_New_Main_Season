@@ -44,7 +44,7 @@ public class ExtendIntake extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_Timer.get() >= 3 || m_intake.isDeployed()){
+    if(m_Timer.get() >= 1.5 || m_intake.isDeployed()){
       return true;
     }
     return false;
