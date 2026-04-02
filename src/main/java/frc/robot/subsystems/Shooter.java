@@ -122,17 +122,22 @@ public class Shooter extends SubsystemBase {
     }
 
     public double distanceFromHub() {
-        double distance = -1;
-        if (!LimelightHelpers.getTV("limelight-higher")) {
+        boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;
+        Translation2d targetPosition = isBlue ? Constants.AlignTargets.BLUE_HUB : Constants.AlignTargets.RED_HUB;
+        double dist = m_drivetrain.getDistanceTo(targetPosition);
+        return dist;
+
+        /*double distance = -1;
+        if (!LimelightHelpers.getTV("limelight-hub")) {
             return distance; // Invalid distance
         }
-        double offsetAngleVertical = LimelightHelpers.getTY("limelight-higher");
+        double offsetAngleVertical = LimelightHelpers.getTY("limelight-hub");
         double angleToGoal = Math.toRadians(Constants.ShooterConstants.LIMELIGHT_ANGLE + offsetAngleVertical);
 
         distance = (Constants.FieldConstants.HUB_APRILTAG_HEIGHT - Constants.ShooterConstants.LIMELIGHT_HEIGHT)
                 / Math.tan(angleToGoal);
 
-        return Math.abs(distance);
+        return Math.abs(distance);*/
     }
 
     public double getFlywheelSpeed() {

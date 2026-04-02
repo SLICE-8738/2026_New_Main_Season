@@ -20,7 +20,7 @@ public class Shoot extends Command {
   private ShuffleboardTab m_ShuffleboardTab;
   //private GenericEntry m_ShuffleboardAngle;
   private GenericEntry m_ShuffleboardRPM;
-  private GenericEntry m_ShuffleboardDistance;
+  private SimpleWidget m_ShuffleboardDistance;
   private SimpleWidget m_ShuffleboardGoodSpeed;
   private final CommandSwerveDrivetrain m_drivetrain;
   /** Creates a new Shoot. */
@@ -30,7 +30,7 @@ public class Shoot extends Command {
     m_ShuffleboardTab = Shuffleboard.getTab("Shooter Tuning");
     //m_ShuffleboardAngle = m_ShuffleboardTab.add("Angle: ", 28).getEntry();
     m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", -1200).getEntry();
-    m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0).getEntry();
+    m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0);
     m_ShuffleboardGoodSpeed = m_ShuffleboardTab.add("Last good Speed", m_Shooter.getGoodSpeed());
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_Shooter);
@@ -44,19 +44,19 @@ public class Shoot extends Command {
   @Override
   public void execute() {
     double distance = m_Shooter.distanceFromHub();//m_drivetrain.getDistanceTo(Constants.AlignTargets.RED_HUB);
-    m_ShuffleboardDistance.setDouble(distance);
+    m_ShuffleboardDistance.getEntry().setDouble(distance);
     m_ShuffleboardGoodSpeed.getEntry().setDouble(m_Shooter.getGoodSpeed());
     // TODO uncomment and recomment depending on which mode the shooter is in
     // double angle = 28; //Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rps = m_ShuffleboardRPM.getDouble(-1200);  //Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
-    //double angle = m_ShuffleboardAngle.getDouble(12);
-    //double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
+    double rpm = m_ShuffleboardRPM.getDouble(-1200); //Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    // double angle = m_ShuffleboardAngle.getDouble(12);
+    // double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
     if (distance == -1) {
       m_Shooter.spinFlywheels(-m_Shooter.getGoodSpeed());
     }
     else {
-      m_Shooter.setGoodSpeed(rps);
-      m_Shooter.spinFlywheels(rps); 
+      m_Shooter.setGoodSpeed(rpm);
+      m_Shooter.spinFlywheels(rpm); 
     }
     
   }

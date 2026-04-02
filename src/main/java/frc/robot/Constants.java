@@ -188,9 +188,9 @@ public final class Constants {
 
 
         // TODO: tune PIDs
-        public static final double FLYWHEEL_KP = 1.0;
-        public static final double FLYWHEEL_KI =  0.45;
-        public static final double FLYWHEEL_KD = 0.02;
+        public static final double FLYWHEEL_KP = 0.6;
+        public static final double FLYWHEEL_KI =  0.4;
+        public static final double FLYWHEEL_KD = 0.001;
         public static final double FLYWHEEL_KS = 1.5;
         public static final double FLYWHEEL_KV = 0.12;
         public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 60;
@@ -210,7 +210,7 @@ public final class Constants {
         public static final int PIVOT_SUPPLY_CURRENT_LIMIT = 40;
 
         public static final double SHOOTER_STOW = 12.0; // The angle at which the shooter is considered stowed
-        public static final double FLYWHEEL_RPM_ACCEPTABLE_ERROR = 40.0; // rpm
+        public static final double FLYWHEEL_RPM_ACCEPTABLE_ERROR = 60.0; // rpm
         public static final double VERTICAL_AIM_ACCEPTABLE_ERROR = .25; // degrees
 
         // TODO: Add an offset from the apriltag to the hub center = 0.60375 m
@@ -244,8 +244,8 @@ public final class Constants {
         // Robot dimensions
         public static final double SHOOTER_HEIGHT = 1.7891; // Feet
         public static final double FLYWHEEL_RADIUS = 0.1667; // Feet
-        public static final double LIMELIGHT_ANGLE = 30.29; // Degrees
-        public static final double LIMELIGHT_HEIGHT = 0.52; // Metres
+        public static final double LIMELIGHT_ANGLE = 55.0; // Degrees
+        public static final double LIMELIGHT_HEIGHT = Units.inchesToMeters(15.25); // Metres
     }
 
     public static class FieldConstants {

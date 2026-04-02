@@ -224,20 +224,20 @@ public class RobotContainer {
 
         /* Shooter */
 
-        /*
-        TODO please please please fix the shooter so we can uncomment this code, Harrissh
-        Buttons.controller1_RightTrigger.whileTrue(m_shoot);//m_BasicShootHub);
-        Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
-        Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
-        Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
-        */
-        Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub);
+        
+        //TODO please please please fix the shooter so we can uncomment this code, Harrissh
+        Buttons.controller1_RightTrigger.whileTrue(m_shoot.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));//m_BasicShootHub);
+        //Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
+        //Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
+        //Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
+        
+        //Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
 
         
         /* Intake */
         
         Buttons.controller1_LeftTrigger.onTrue(m_ExtendIntake.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
-        Buttons.controller1_AButton.onTrue(new SequentialCommandGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
+        Buttons.controller1_AButton.onTrue(new ParallelCommandGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
         /* Indexer */
 
