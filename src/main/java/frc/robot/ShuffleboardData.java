@@ -4,6 +4,7 @@ import java.util.Map;
 
 import edu.wpi.first.hal.DriverStationJNI;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.internal.DriverStationModeThread;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
@@ -30,6 +31,8 @@ public class ShuffleboardData extends SubsystemBase {
     
     /* Driverstation Widgets */
     SimpleWidget isEnabled;
+    SimpleWidget isBrownedOut;
+    SimpleWidget batteryVoltage;
     
     /*Drivetrain Widgets */
     SimpleWidget drivetrainVelocityX;
@@ -70,9 +73,14 @@ public class ShuffleboardData extends SubsystemBase {
         /// Driver Tab Values /////
         ///////////////////////////
         
+        
+        
         /* Driverstation */
         isEnabled = driverTab.add("Enabled", DriverStation.isEnabled())
             .withWidget(BuiltInWidgets.kBooleanBox);
+        isBrownedOut = driverTab.add("Browned Out", RobotController.isBrownedOut())
+            .withWidget(BuiltInWidgets.kBooleanBox);
+        batteryVoltage = driverTab.add("Battery Voltage", RobotController.getBatteryVoltage());
         
         /* Drivetrain */
         drivetrainVelocityX = driverTab.add("Drivetrain Velocity X", m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
@@ -119,6 +127,8 @@ public class ShuffleboardData extends SubsystemBase {
         ///////////////////
         
         isEnabled.getEntry().setBoolean(DriverStation.isEnabled());
+        isBrownedOut.getEntry().setBoolean(RobotController.isBrownedOut());
+        batteryVoltage.getEntry().setDouble(RobotController.getBatteryVoltage());
         
         drivetrainVelocityX.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
         drivetrainVelocityY.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
