@@ -16,7 +16,7 @@ public class ExtendIntake extends Command {
   public ExtendIntake (Intake intake) {
     m_intake = intake;
     m_Timer = new Timer();
-    //addRequirements(m_intake);
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.

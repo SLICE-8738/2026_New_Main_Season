@@ -48,7 +48,7 @@ public class Shoot extends Command {
     m_ShuffleboardGoodSpeed.getEntry().setDouble(m_Shooter.getGoodSpeed());
     // TODO uncomment and recomment depending on which mode the shooter is in
     // double angle = 28; //Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
-    double rpm = m_ShuffleboardRPM.getDouble(-1200); //Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm() / 60;
+    double rpm = /* m_ShuffleboardRPM.getDouble(-1200); */ Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm();
     // double angle = m_ShuffleboardAngle.getDouble(12);
     // double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
     if (distance == -1) {

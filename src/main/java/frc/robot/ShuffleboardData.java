@@ -18,26 +18,38 @@ import frc.robot.subsystems.Shooter;
 
 public class ShuffleboardData extends SubsystemBase {
 
+    CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
     Intake m_Intake;
     Shooter m_Shooter;
     
     ShuffleboardTab driverTab, autoTab, debugTab, shooterTuning;
 
     ///////////////////////////
-    /// Driver Tab Values //////
+    /// Driver Tab Values /////
     ///////////////////////////
+    
+    /* Driverstation Widgets */
+    SimpleWidget isEnabled;
+    
+    /*Drivetrain Widgets */
+    SimpleWidget drivetrainVelocityX;
+    SimpleWidget drivetrainVelocityY;
 
     //SimpleWidget batteryVoltage;
 
     ///////////////////////////
     /// Debug Tab Values //////
     ///////////////////////////
+    
+    /* Drivetrain Widgets */
 
     /* Intake Widgets */
     SimpleWidget intakeAtStow;
     SimpleWidget intakeAtDeploy;
     SimpleWidget intakeExtendPosition;
     SimpleWidget intakeRunning;
+    SimpleWidget intakeExtenderSpeed;
+    SimpleWidget intakeRollerSpeed;
 
     /* Shooter Widgets */
     SimpleWidget shooterRPM;
@@ -45,6 +57,7 @@ public class ShuffleboardData extends SubsystemBase {
 
     public ShuffleboardData(CommandSwerveDrivetrain m_CommandSwerveDrivetrain, Intake m_Intake, Shooter m_Shooter){
         
+        this.m_CommandSwerveDrivetrain = m_CommandSwerveDrivetrain;
         this.m_Intake = m_Intake;
         this.m_Shooter = m_Shooter;
 
@@ -56,6 +69,15 @@ public class ShuffleboardData extends SubsystemBase {
         ///////////////////////////
         /// Driver Tab Values /////
         ///////////////////////////
+        
+        /* Driverstation */
+        isEnabled = driverTab.add("Enabled", DriverStation.isEnabled())
+            .withWidget(BuiltInWidgets.kBooleanBox);
+        
+        /* Drivetrain */
+        drivetrainVelocityX = driverTab.add("Drivetrain Velocity X", m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
+        drivetrainVelocityY = driverTab.add("Drivetrian Velocity Y", m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
+
         
         //batteryVoltage = driverTab.add("Battery Voltage", );
 
@@ -70,13 +92,14 @@ public class ShuffleboardData extends SubsystemBase {
         intakeExtendPosition = debugTab.add("Intake Extension Position", m_Intake.getExtenderPosition());
         intakeRunning = debugTab.add("Intake Runs Command", m_Intake.getCurrentCommand() != null)
             .withWidget(BuiltInWidgets.kBooleanBox);
-        
+        intakeExtenderSpeed = debugTab.add("Intake Extender Speed", m_Intake.getVelocity()[0]);
+        intakeRollerSpeed = debugTab.add("Intake Roller Speed", m_Intake.getRollerVelocity());
         
 
         
 
         ///////////////////////////
-        /// Shooter Tab Values //////
+        /// Shooter Tab Values ////
         ///////////////////////////
 
 
@@ -94,12 +117,26 @@ public class ShuffleboardData extends SubsystemBase {
         ///////////////////
         /// Driver Tab ////
         ///////////////////
+        
+        isEnabled.getEntry().setBoolean(DriverStation.isEnabled());
+        
+        drivetrainVelocityX.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
+        drivetrainVelocityY.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
+
+        ///////////////////////////
+        /// Debug Tab Values //////
+        ///////////////////////////
 
         intakeAtStow.getEntry().setBoolean(m_Intake.isStowed());
         intakeAtDeploy.getEntry().setBoolean(m_Intake.isDeployed());
         intakeExtendPosition.getEntry().setDouble(m_Intake.getExtenderPosition());
         intakeRunning.getEntry().setBoolean(m_Intake.getCurrentCommand() != null);
+        intakeExtenderSpeed.getEntry().setDouble(m_Intake.getVelocity()[0]);
+        intakeRollerSpeed.getEntry().setDouble(m_Intake.getRollerVelocity());
 
+        ///////////////////////////
+        /// Shooter Tab Values ////
+        ///////////////////////////
 
         shooterRPM.getEntry().setDouble(m_Shooter.getFlywheelSpeed());
 

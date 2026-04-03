@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 /* Add your docs here. */
@@ -23,6 +24,8 @@ public class Buttons {
     public static Trigger controller1_plusButton = new JoystickButton(controller1, 8);
     public static Trigger controller1_pressLeftStick = new JoystickButton(controller1, 9);
     public static Trigger controller1_pressRightStick = new JoystickButton(controller1, 10);
+    public static Trigger controller1_povUp = new POVButton(controller1, 0);
+    public static Trigger controller1_povDown = new POVButton(controller1, 180);
     public static Trigger controller1_LeftTrigger =  new Trigger(() -> controller1.getRawAxis(2) > 0.1);
     public static Trigger controller1_RightTrigger = new Trigger(() -> controller1.getRawAxis(3) > 0.1);
 

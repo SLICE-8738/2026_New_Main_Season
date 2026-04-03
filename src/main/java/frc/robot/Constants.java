@@ -49,10 +49,10 @@ public final class Constants {
         public static final Translation2d RED_PASS_LEFT = new Translation2d(13.5, 6.5);
         public static final Translation2d RED_PASS_RIGHT = new Translation2d(13.5, 1.5);
 
-        public static final double HEADING_KP = 2.5;
+        public static final double HEADING_KP = 2.95;
         public static final double HEADING_KI = 0.0;
         public static final double HEADING_KD = 0.06;
-        public static final double HEADING_TOLERANCE_DEG = 2.0;
+        public static final double HEADING_TOLERANCE_DEG = 1.5;
     }
 
     public static class IndexerConstants {
@@ -60,7 +60,7 @@ public final class Constants {
         public static final int STAGE_ONE_MOTOR_ID = 7;
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
-        public static final double STAGE_ONE_INTAKE_SPEED = 0.8;
+        public static final double STAGE_ONE_INTAKE_SPEED = 0.9;
         public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.5;
         public static final double STAGE_TWO_INTAKE_SPEED = 1.0;
 
@@ -135,12 +135,14 @@ public final class Constants {
         public static final com.ctre.phoenix6.signals.SensorDirectionValue ABSOLUTE_ENCODER_INVERT = com.ctre.phoenix6.signals.SensorDirectionValue.CounterClockwise_Positive;
 
         /* Velocity limits */
-        public static final double MAX_LINEAR_VELOCITY = 4.5; // m/s
+        public static final double MAX_LINEAR_VELOCITY = 4.5; // meters/sec
         public static final double MAX_ANGULAR_VELOCITY = 5.279; // rad/s
 
+        public static final double MAX_INTAKE_LINEAR_VELOCITY = 1.5; // meters/sec
+
         // PathPlanner, TODO: remake PathPlanner constants
-      //  public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS = new com.pathplanner.lib.path.PathConstraints(
-       //         4.5, 3.0, Math.PI * 2, Math.PI * 2);
+        // public static final com.pathplanner.lib.path.PathConstraints PATH_CONSTRAINTS = new com.pathplanner.lib.path.PathConstraints(
+        //        4.5, 3.0, Math.PI * 2, Math.PI * 2);
         public static final double TRANSLATION_KP = 4.5;
         public static final double ROTATION_KP = 1.0;
     }
@@ -157,9 +159,9 @@ public final class Constants {
         public static final int EXTENDER_MOTOR_ID = 5;
 
         // Positional subsystem constants
-        public static final double EXTENDER_KP = 1.25;//2.5;
+        public static final double EXTENDER_KP = 2.5;
         public static final double EXTENDER_KI = 0;
-        public static final double EXTENDER_KD = 0.025;
+        public static final double EXTENDER_KD = 0.035;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this
         public static final double EXTENDER_RATIO = 50.0 / 9.0; // 5.55 repeating
         public static final int EXTENDER_STATOR_CURRENT_LIMIT = 20;
@@ -217,27 +219,26 @@ public final class Constants {
         public static final InterpolatingTreeMap<Double, FullShooterParams> SHOOTER_MAP = new InterpolatingTreeMap<>(
                 MathUtil::inverseInterpolate, FullShooterParams::interpolate);
         static {
-            SHOOTER_MAP.put(0.510 -1.5, new FullShooterParams(1450.0, 12.0, 1.17));
-            SHOOTER_MAP.put(1.000 -1.5, new FullShooterParams(1800.0, 13.0, 0.85));
-            SHOOTER_MAP.put(1.510 -1.5, new FullShooterParams(1850.0, 14.0, 0.93));
-            SHOOTER_MAP.put(2.000 -1.5, new FullShooterParams(2150.0, 16.5, 1.11));
-            SHOOTER_MAP.put(2.475 -1.5, new FullShooterParams(1950.0, 21.0, 0.98));
-            SHOOTER_MAP.put(3.065 -1.5, new FullShooterParams(2225.0, 23.0, 0.97));
-            SHOOTER_MAP.put(4.000 -1.5, new FullShooterParams(2250.0, 28.0, 0.93));
-            SHOOTER_MAP.put(4.480 -1.5, new FullShooterParams(2400.0, 29.0, 0.83));
-            //SHOOTER_MAP.put(4.08, new FullShooterParams(-2400.0, 33.0, 1.145));
-            //SHOOTER_MAP.put(5.02, new FullShooterParams(-2500.0, 34.0, 1.025));
+            SHOOTER_MAP.put(2.064, new FullShooterParams(-2250.0));
+            SHOOTER_MAP.put(2.516, new FullShooterParams(-2375.0));
+            SHOOTER_MAP.put(2.730, new FullShooterParams(-2400.0));
+            SHOOTER_MAP.put(3.02, new FullShooterParams(-2425.0));
+            SHOOTER_MAP.put(3.184, new FullShooterParams(-2500.0));
+            SHOOTER_MAP.put(3.474, new FullShooterParams(-2550.0));
+            SHOOTER_MAP.put(3.999, new FullShooterParams(-2675.0));
+            SHOOTER_MAP.put(4.265, new FullShooterParams(-2800.0));
+            SHOOTER_MAP.put(4.497, new FullShooterParams(-2925.0));
+            SHOOTER_MAP.put(5.006, new FullShooterParams(-3100.0));
 
         }
 
-        public record FullShooterParams(double rpm, double hoodAngle, double tof)
+        public record FullShooterParams(double rpm)
                 implements Interpolatable<FullShooterParams> {
             @Override
             public FullShooterParams interpolate(FullShooterParams endValue, double t) {
                 return new FullShooterParams(
-                        rpm + (endValue.rpm - rpm) * t,
-                        hoodAngle + (endValue.hoodAngle - hoodAngle) * t,
-                        tof + (endValue.tof - tof) * t);
+                        rpm + (endValue.rpm - rpm) * t
+                );
             }
         }
 

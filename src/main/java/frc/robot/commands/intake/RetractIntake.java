@@ -29,7 +29,7 @@ public class RetractIntake extends Command {
     m_ShuffleboardTab = Shuffleboard.getTab("Driver");
     m_TimerEntry = m_ShuffleboardTab.add("Retract Intake Timer", 0.0);
     
-    //addRequirements(m_intake);
+    addRequirements(m_intake);
   }
 
   // Called when the command is initially scheduled.

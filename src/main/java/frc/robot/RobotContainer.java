@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -33,15 +34,13 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.indexer.SpinStageOne;
-import frc.robot.commands.indexer.SpinStageOneManual;
 import frc.robot.commands.indexer.SpinStageTwo;
-import frc.robot.commands.indexer.SpinStageTwoManual;
 import frc.robot.commands.intake.OscillateIntake;
 import frc.robot.commands.intake.ExtendIntake;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.Spintake;
 import frc.robot.commands.intake.Stoptake;
-import frc.robot.commands.intake.TestExtendIntake;
+import frc.robot.commands.intake.TestIntake;
 import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.BasicShoot;
 import frc.robot.commands.shooter.Shoot;
@@ -79,7 +78,8 @@ public class RobotContainer {
     public final OscillateIntake m_OscillateIntake;
     public final ExtendIntake m_IntakeCommand;
 
-    public final TestExtendIntake m_TestExtendIntake;
+    public final TestIntake m_TestExtendIntake;
+    public final TestIntake m_TestRetractIntake;
 
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
@@ -101,6 +101,7 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     /* Triggers */
+    private Trigger driveIntakeTrigger;
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
 
@@ -149,7 +150,8 @@ public class RobotContainer {
         // Removed the conditional command because it is not working properly, and is overriding manual controls
         m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
-        m_TestExtendIntake = new TestExtendIntake(m_Intake);
+        m_TestExtendIntake = new TestIntake(m_Intake, 0.05);
+        m_TestRetractIntake = new TestIntake(m_Intake, -0.05);
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
@@ -175,6 +177,9 @@ public class RobotContainer {
          *         new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
         */
 
+        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        SmartDashboard.putData("Auto Mode", autoChooser);
+
         /*
         TODO more auto stuff to figure the heck out of
         */
@@ -186,20 +191,18 @@ public class RobotContainer {
         //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Shoot", m_shoot);
         
-        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        SmartDashboard.putData("Auto Mode", autoChooser);
 
         //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
 
         /* Triggers */
+        driveIntakeTrigger = new Trigger(() -> m_Intake.getCurrentCommand() != null);
+
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
         // indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed()); This trigger currently does not work; there is some
         // sort of error where the atTargetSpeed() method isn't returning the proper values
         indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
 
 
-        /* Smart Dashboard */
-        //SmartDashboard.putData("Auto Mode", autoChooser);
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
@@ -226,7 +229,7 @@ public class RobotContainer {
 
         
         //TODO please please please fix the shooter so we can uncomment this code, Harrissh
-        Buttons.controller1_RightTrigger.whileTrue(m_shoot.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));//m_BasicShootHub);
+        Buttons.controller1_RightTrigger.whileTrue(m_shoot.alongWith(new SequentialCommandGroup(new WaitCommand(2.5), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED))));//m_BasicShootHub);
         //Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
         //Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
         //Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
@@ -237,13 +240,15 @@ public class RobotContainer {
         /* Intake */
         
         Buttons.controller1_LeftTrigger.onTrue(m_ExtendIntake.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
-        Buttons.controller1_AButton.onTrue(new ParallelCommandGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
+        Buttons.controller1_AButton.onTrue(new ParallelRaceGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
         /* Indexer */
 
-        Buttons.controller1_YButton.whileTrue(new SpinStageOneManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
-        Buttons.controller1_BButton.whileTrue(new SpinStageTwoManual(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
-        Buttons.controller1_XButton.whileTrue(m_TestExtendIntake);
+        Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
+        Buttons.controller1_BButton.whileTrue(new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
+        
+        Buttons.controller1_povUp.whileTrue(m_TestExtendIntake);
+        Buttons.controller1_povDown.whileTrue(m_TestRetractIntake);
 
 
         // ============
@@ -303,10 +308,17 @@ public class RobotContainer {
         */
 
         
+        driveIntakeTrigger.whileTrue(m_drivetrain.applyRequest(() ->
+                drive.withVelocityX(driverController.getRawAxis(1) * Constants.DriveConstants.MAX_INTAKE_LINEAR_VELOCITY) // Drive forward with negative Y (forward) // Left Y
+                     .withVelocityY(driverController.getRawAxis(0) * Constants.DriveConstants.MAX_INTAKE_LINEAR_VELOCITY) // Drive left with negative X (left) // Left X
+                     .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
+            ));
+        
+        
     }
 
     public Command getAutonomousCommand() {
         return autoChooser.getSelected();
-      //  return autoCommand;
+        //return autoCommand;
     }
 }

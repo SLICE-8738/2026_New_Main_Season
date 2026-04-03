@@ -90,7 +90,7 @@ public class Shooter extends SubsystemBase {
      * @see <a href=
      *      "https://github.wpilib.org/allwpilib/docs/release/java/edu/wpi/first/math/kinematics/ChassisSpeeds.html">ChassisSpeeds</a>
      */
-    public double getHorizontalVelocity(double distance, Translation2d target) {
+    /*public double getHorizontalVelocity(double distance, Translation2d target) {
         FullShooterParams params = Constants.ShooterConstants.SHOOTER_MAP.get(distance);
         double baselineHorizVel = distance / params.tof();
 
@@ -112,7 +112,7 @@ public class Shooter extends SubsystemBase {
         // Flywheel velocity
         double velocityRatio = MathUtil.clamp(requiredVelocity / baselineVelocity, 0.5, 2.0);
         targetSpeed = baseline.rpm() * velocityRatio;
-    }
+    }*/
 
     public void windDownFlywheels() {
         bottomLeftShooterMotor.stopMotor();

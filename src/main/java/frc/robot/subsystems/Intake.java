@@ -87,6 +87,10 @@ public class Intake extends TalonFXPositionalSubsystem {
     return getPositions()[0];
   }
 
+  public double getRollerVelocity(){
+    return rotationMotor.getVelocity().getValueAsDouble();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
