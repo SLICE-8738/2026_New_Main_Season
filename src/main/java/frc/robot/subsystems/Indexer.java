@@ -58,6 +58,14 @@ public class Indexer extends SubsystemBase {
     stageTwoMotor.stopMotor();
   }
 
+  public double getStageOneSpeed(){
+    return stageOneMotor.getVelocity().getValueAsDouble();
+  }
+
+  public double getStageTwoSpeed(){
+    return stageTwoMotor.getVelocity().getValueAsDouble();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

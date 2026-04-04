@@ -14,12 +14,14 @@ import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Shooter;
 
 public class ShuffleboardData extends SubsystemBase {
 
     CommandSwerveDrivetrain m_CommandSwerveDrivetrain;
+    Indexer m_Indexer;
     Intake m_Intake;
     Shooter m_Shooter;
     
@@ -38,7 +40,6 @@ public class ShuffleboardData extends SubsystemBase {
     SimpleWidget drivetrainVelocityX;
     SimpleWidget drivetrainVelocityY;
 
-    //SimpleWidget batteryVoltage;
 
     ///////////////////////////
     /// Debug Tab Values //////
@@ -54,13 +55,22 @@ public class ShuffleboardData extends SubsystemBase {
     SimpleWidget intakeExtenderSpeed;
     SimpleWidget intakeRollerSpeed;
 
+    /* Indexer */
+    SimpleWidget stageOneSpeed;
+    SimpleWidget stageTwoSpeed;
+
+    ///////////////////////////
+    /// Debug Tab Values //////
+    ///////////////////////////
+
     /* Shooter Widgets */
     SimpleWidget shooterRPM;
 
 
-    public ShuffleboardData(CommandSwerveDrivetrain m_CommandSwerveDrivetrain, Intake m_Intake, Shooter m_Shooter){
+    public ShuffleboardData(CommandSwerveDrivetrain m_CommandSwerveDrivetrain, Intake m_Intake, Indexer m_Indexer ,Shooter m_Shooter){
         
         this.m_CommandSwerveDrivetrain = m_CommandSwerveDrivetrain;
+        this.m_Indexer = m_Indexer;
         this.m_Intake = m_Intake;
         this.m_Shooter = m_Shooter;
 
@@ -87,12 +97,11 @@ public class ShuffleboardData extends SubsystemBase {
         drivetrainVelocityY = driverTab.add("Drivetrian Velocity Y", m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
 
         
-        //batteryVoltage = driverTab.add("Battery Voltage", );
-
         ///////////////////////////
         /// Debug Tab Values //////
         ///////////////////////////
 
+        /* Intake */
         intakeAtStow = debugTab.add("Intake At Stow", m_Intake.isStowed())
             .withWidget(BuiltInWidgets.kBooleanBox);
         intakeAtDeploy = debugTab.add("Intake At Deploy", m_Intake.isDeployed())
@@ -103,7 +112,9 @@ public class ShuffleboardData extends SubsystemBase {
         intakeExtenderSpeed = debugTab.add("Intake Extender Speed", m_Intake.getVelocity()[0]);
         intakeRollerSpeed = debugTab.add("Intake Roller Speed", m_Intake.getRollerVelocity());
         
-
+        /* Indexer */
+        stageOneSpeed = debugTab.add("Indexer Floor Speed", m_Indexer.getStageOneSpeed());
+        stageTwoSpeed = debugTab.add("Indexer Roller Speed", m_Indexer.getStageTwoSpeed());
         
 
         ///////////////////////////
@@ -137,12 +148,17 @@ public class ShuffleboardData extends SubsystemBase {
         /// Debug Tab Values //////
         ///////////////////////////
 
+        /* Intake */
         intakeAtStow.getEntry().setBoolean(m_Intake.isStowed());
         intakeAtDeploy.getEntry().setBoolean(m_Intake.isDeployed());
         intakeExtendPosition.getEntry().setDouble(m_Intake.getExtenderPosition());
         intakeRunning.getEntry().setBoolean(m_Intake.getCurrentCommand() != null);
         intakeExtenderSpeed.getEntry().setDouble(m_Intake.getVelocity()[0]);
         intakeRollerSpeed.getEntry().setDouble(m_Intake.getRollerVelocity());
+
+        /* Indexer */
+        stageOneSpeed.getEntry().setDouble(m_Indexer.getStageOneSpeed());
+        stageTwoSpeed.getEntry().setDouble(m_Indexer.getStageTwoSpeed());
 
         ///////////////////////////
         /// Shooter Tab Values ////

@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class Buttons {
     public static XboxController controller1 = new XboxController(Constants.OIConstants.kDriverControllerPort);
 
+
     /* DRIVER CONTROLLER */
     public static Trigger controller1_AButton = new JoystickButton(controller1, 1);
     public static Trigger controller1_BButton = new JoystickButton(controller1, 2);
@@ -25,7 +26,9 @@ public class Buttons {
     public static Trigger controller1_pressLeftStick = new JoystickButton(controller1, 9);
     public static Trigger controller1_pressRightStick = new JoystickButton(controller1, 10);
     public static Trigger controller1_povUp = new POVButton(controller1, 0);
+    public static Trigger controller1_povRight = new POVButton(controller1, 90);
     public static Trigger controller1_povDown = new POVButton(controller1, 180);
+    public static Trigger controller1_povLeft = new POVButton(controller1, 270);
     public static Trigger controller1_LeftTrigger =  new Trigger(() -> controller1.getRawAxis(2) > 0.1);
     public static Trigger controller1_RightTrigger = new Trigger(() -> controller1.getRawAxis(3) > 0.1);
 

@@ -16,6 +16,7 @@ public class SpinStageTwo extends Command {
     // Use addRequirements() here to declare subsystem dependencies.
     this.m_Indexer = m_Indexer;
     this.speed = speed;
+    addRequirements(m_Indexer);
 
   }
 

@@ -19,6 +19,7 @@ import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,14 +34,18 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.AutoAlign;
+import frc.robot.commands.indexer.SpinBothIndexer;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
+import frc.robot.commands.indexer.StageOnePassive;
 import frc.robot.commands.intake.OscillateIntake;
 import frc.robot.commands.intake.ExtendIntake;
+import frc.robot.commands.intake.IntakeWhileShooting;
 import frc.robot.commands.intake.RetractIntake;
 import frc.robot.commands.intake.Spintake;
 import frc.robot.commands.intake.Stoptake;
-import frc.robot.commands.intake.TestIntake;
+import frc.robot.commands.intake.MoveIntake;
+import frc.robot.commands.intake.Unstucktake;
 import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.BasicShoot;
 import frc.robot.commands.shooter.Shoot;
@@ -75,24 +80,21 @@ public class RobotContainer {
     public final RetractIntake m_RetractIntake;
     public final Spintake m_Spintake;
     public final Stoptake m_Stoptake;
+    public final Unstucktake m_Unstucktake; 
     public final OscillateIntake m_OscillateIntake;
     public final ExtendIntake m_IntakeCommand;
 
-    public final TestIntake m_TestExtendIntake;
-    public final TestIntake m_TestRetractIntake;
+    public final MoveIntake m_TestExtendIntake;
+    public final MoveIntake m_TestRetractIntake;
 
     /* Indexer */
     public final SpinStageOne m_spinStageOne;
     public final SpinStageTwo m_spinStageTwo;
     public final SpinStageOne m_stopStageOne;
+    public final StageOnePassive m_stageOnePassive;
 
     /* Shooter */
     
-    //Probably not going to be utilizing Jimits AlignAndShoot command from here on out
-    public final AlignAndShoot m_alignAndShootHub;
-    //public final AlignAndShoot m_alignAndPassLeft;
-    //public final AlignAndShoot m_alignAndPassRight;
-    // */
     public final Shoot m_shoot;
     public final BasicShoot m_BasicShootHub;
 
@@ -102,8 +104,10 @@ public class RobotContainer {
 
     /* Triggers */
     private Trigger driveIntakeTrigger;
+    private Trigger shootingIntakeTrigger;
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
+    private Trigger controllerRumbleTrigger;
 
     /* Other Commands */
     //private Command autoCommand;
@@ -120,9 +124,12 @@ public class RobotContainer {
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
+    /* Shuffleboard */
     private ShuffleboardData m_ShuffleboardData;
     
     public RobotContainer() {
+
+        //Buttons.controller1.setRumble(RumbleType.kBothRumble, 1);
 
         // ==========================
         // Subsystems
@@ -147,27 +154,25 @@ public class RobotContainer {
         m_Spintake        = new Spintake(m_Intake);
         m_OscillateIntake = new OscillateIntake(m_Intake);
         m_Stoptake        = new Stoptake(m_Intake);
+        m_Unstucktake     = new Unstucktake(m_Intake);
+
+
         // Removed the conditional command because it is not working properly, and is overriding manual controls
         m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
-        m_TestExtendIntake = new TestIntake(m_Intake, 0.05);
-        m_TestRetractIntake = new TestIntake(m_Intake, -0.05);
+        m_TestExtendIntake = new MoveIntake(m_Intake, 0.05);
+        m_TestRetractIntake = new MoveIntake(m_Intake, -0.05);
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
         m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
         m_stopStageOne = new SpinStageOne(m_Indexer, 0);
+        m_stageOnePassive = new StageOnePassive(m_Indexer);
 
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
         m_BasicShootHub = new BasicShoot(m_Shooter);
         
-        //* Probably not going to be utilizing Jimits AlignAndShoot command from here on out
-        
-        m_alignAndShootHub = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.HUB, driverController);
-        //m_alignAndPassLeft = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_LEFT, driverController);
-        //m_alignAndPassRight = new AlignAndShoot(m_Shooter, m_Indexer, m_drivetrain, AlignAndShoot.Target.PASS_RIGHT, driverController);
-        // */
 
         /* Autonomous */
 
@@ -196,17 +201,16 @@ public class RobotContainer {
 
         /* Triggers */
         driveIntakeTrigger = new Trigger(() -> m_Intake.getCurrentCommand() != null);
-
+        shootingIntakeTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
-        // indexerTrigger = new Trigger(() -> m_Shooter.atTargetSpeed()); This trigger currently does not work; there is some
-        // sort of error where the atTargetSpeed() method isn't returning the proper values
-        indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null);
+        indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null && m_Intake.isStowed() == false);
+        controllerRumbleTrigger = new Trigger(() -> m_Shooter.isHubAlmostActive());
 
 
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
 
-        m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake, m_Shooter);
+        m_ShuffleboardData = new ShuffleboardData(m_drivetrain, m_Intake, m_Indexer ,m_Shooter);
 
         configureBindings();
         
@@ -228,20 +232,24 @@ public class RobotContainer {
         /* Shooter */
 
         
-        //TODO please please please fix the shooter so we can uncomment this code, Harrissh
-        Buttons.controller1_RightTrigger.whileTrue(m_shoot.alongWith(new SequentialCommandGroup(new WaitCommand(2.5), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED))));//m_BasicShootHub);
-        //Buttons.controller1_leftBumper.whileTrue(m_alignAndPassLeft);
-        //Buttons.controller1_rightBumper.whileTrue(m_alignAndPassRight);
-        //Buttons.controller1_RightTrigger.whileTrue(m_alignAndShootHub);
-        
-        //Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
-
+        // TODO please please please fix the shooter so we can uncomment this code, Harrissh
+        Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub/*m_shoot*/
+            .alongWith(/*new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED),*/
+            new SequentialCommandGroup(
+                new WaitCommand(2), 
+                    new ParallelCommandGroup(
+                        new SpinBothIndexer(m_Indexer), 
+                            new SequentialCommandGroup(
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));
+       
         
         /* Intake */
         
         Buttons.controller1_LeftTrigger.onTrue(m_ExtendIntake.alongWith(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED)));
         Buttons.controller1_AButton.onTrue(new ParallelRaceGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
+        Buttons.controller1_povRight.whileTrue(m_Unstucktake);
+
         /* Indexer */
 
         Buttons.controller1_YButton.whileTrue(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED));
@@ -256,6 +264,7 @@ public class RobotContainer {
         // ============
 
 
+        //shootingIntakeTrigger.whileTrue(new MoveIntake(m_Intake, -0.3));
         // TODO fix and uncomment after testing
         //oscillateTrigger.whileTrue(m_OscillateIntake);
         // TODO fix and uncomment after testing
@@ -279,6 +288,8 @@ public class RobotContainer {
                     .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
             )
         );
+
+        m_Indexer.setDefaultCommand(m_stageOnePassive);
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.

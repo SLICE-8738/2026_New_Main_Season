@@ -4,30 +4,30 @@
 
 package frc.robot.commands.indexer;
 
-
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.subsystems.Indexer;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class SpinStageOne extends Command {
-  /** Creates a new SpinStageOne. */
-  private Indexer m_Indexer;
-  private double speed;
-  public SpinStageOne(Indexer m_Indexer, double speed) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.m_Indexer = m_Indexer;
-    this.speed = speed;
-    addRequirements(m_Indexer);
+public class StageOnePassive extends Command {
 
+  private Indexer m_Indexer;
+
+  /** Creates a new StageOnePassive. */
+  public StageOnePassive(Indexer m_Indexer) {
+    this.m_Indexer =  m_Indexer;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_Indexer);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {}
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Indexer.runStageOneMotor(speed);
+    m_Indexer.runStageOneMotor(Constants.IndexerConstants.STAGE_ONE_INTAKE_PASSIVE_SPEED);
   }
 
   // Called once the command ends or is interrupted.

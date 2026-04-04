@@ -4,44 +4,42 @@
 
 package frc.robot.commands.intake;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Buttons;
 import frc.robot.subsystems.Intake;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class TestIntake extends Command {
+public class IntakeWhileShooting extends Command {
 
-  private Intake intake;
-  private double speed;
+  Intake m_Intake;
 
-  /** Creates a new ManualExtendIntake. */
-  public TestIntake(Intake intake, double speed) {
-    this.intake = intake;
-    this.speed = speed;
+  /** Creates a new IntakeWhileShooting. */
+  public IntakeWhileShooting(Intake m_Intake) {
+    this.m_Intake = m_Intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    // addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    m_Intake.stopRoller();
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.extendSetSpeed(speed);
+    m_Intake.extendSetSpeed(-0.25);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intake.extendSetSpeed(0);
-  }
+  public void end(boolean interrupted) {}
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
+    if(m_Intake.isStowed()){
+      return true;
+    }
     return false;
   }
 }

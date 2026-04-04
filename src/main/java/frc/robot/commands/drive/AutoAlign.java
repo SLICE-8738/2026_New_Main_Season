@@ -78,12 +78,12 @@ public class AutoAlign extends Command {
         double headingCorrection = m_drivetrain.getHeadingPIDOutput(targetPosition);
         
         m_drivetrain.setControl(driveRequest
-                .withVelocityX(m_driverController.getLeftY() * MaxSpeed * 0.6)
-                .withVelocityY(m_driverController.getLeftX() * MaxSpeed * 0.6)
+                .withVelocityX(m_driverController.getLeftY() * MaxSpeed)
+                .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
                 .withRotationalRate(headingCorrection));
         
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
-            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this ou
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this out
             if (limelightPose != null && limelightPose.tagCount > 0 ) {
                 m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }
@@ -104,7 +104,7 @@ public class AutoAlign extends Command {
     public void end(boolean interrupted) {
 
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
-            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this ou
+            var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this out
             if (limelightPose != null && limelightPose.tagCount > 0 ) {
                 m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }

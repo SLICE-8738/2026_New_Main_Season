@@ -49,10 +49,10 @@ public final class Constants {
         public static final Translation2d RED_PASS_LEFT = new Translation2d(13.5, 6.5);
         public static final Translation2d RED_PASS_RIGHT = new Translation2d(13.5, 1.5);
 
-        public static final double HEADING_KP = 2.95;
+        public static final double HEADING_KP = 6.0;
         public static final double HEADING_KI = 0.0;
         public static final double HEADING_KD = 0.06;
-        public static final double HEADING_TOLERANCE_DEG = 1.5;
+        public static final double HEADING_TOLERANCE_DEG = 1.0;
     }
 
     public static class IndexerConstants {
@@ -61,7 +61,7 @@ public final class Constants {
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.9;
-        public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.5;
+        public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.4;
         public static final double STAGE_TWO_INTAKE_SPEED = 1.0;
 
         public static final int INDEXER_STATOR_CURRENT_LIMIT = 30;
