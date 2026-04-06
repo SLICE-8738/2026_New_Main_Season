@@ -43,6 +43,11 @@ public final class Constants {
         */
         public static final Translation2d RED_HUB = new Translation2d(4.625, 4.034);
         public static final Translation2d BLUE_HUB = new Translation2d(11.915, 4.034);
+        
+        public static final Translation2d RED_TRENCH_LEFT = new Translation2d(4.625, 0.645);
+        public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(4.625, 7.425);
+        public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(11.915, 0.645);
+        public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(11.915, 7.425);
 
         public static final Translation2d BLUE_PASS_LEFT = new Translation2d(3.0, 6.5);
         public static final Translation2d BLUE_PASS_RIGHT = new Translation2d(3.0, 1.5);
@@ -62,10 +67,10 @@ public final class Constants {
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.9;
         public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.4;
-        public static final double STAGE_TWO_INTAKE_SPEED = 1.0;
+        public static final double STAGE_TWO_INTAKE_SPEED = 1;
 
-        public static final int INDEXER_STATOR_CURRENT_LIMIT = 30;
-        public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 25;
+        public static final int INDEXER_STATOR_CURRENT_LIMIT = 80;
+        public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 60;
     }
 
     public static class DriveConstants {
@@ -237,6 +242,28 @@ public final class Constants {
             @Override
             public FullShooterParams interpolate(FullShooterParams endValue, double t) {
                 return new FullShooterParams(
+                        rpm + (endValue.rpm - rpm) * t
+                );
+            }
+        }
+
+        public static final InterpolatingTreeMap<Double, FullPassingParams> PASSING_MAP = new InterpolatingTreeMap<>(
+                MathUtil::inverseInterpolate, FullPassingParams::interpolate);
+        static {
+            PASSING_MAP.put(1.354, new FullPassingParams(-2300.0));
+            PASSING_MAP.put(1.819, new FullPassingParams(-2500.0));
+            PASSING_MAP.put(2.290, new FullPassingParams(-2700.0));
+            PASSING_MAP.put(3.167, new FullPassingParams(-2900.0));
+            PASSING_MAP.put(3.587, new FullPassingParams(-3100.0));
+        
+
+        }
+
+        public record FullPassingParams(double rpm)
+                implements Interpolatable<FullPassingParams> {
+            @Override
+            public FullPassingParams interpolate(FullPassingParams endValue, double t) {
+                return new FullPassingParams(
                         rpm + (endValue.rpm - rpm) * t
                 );
             }

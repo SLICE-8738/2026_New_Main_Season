@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.896033333333334,
-        "y": 6.685488888888889
+        "x": 7.3384165477888725,
+        "y": 6.357489300998574
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.486058537252097,
-        "y": 6.685488888888889
+        "x": 6.928441751707635,
+        "y": 6.357489300998574
       },
       "isLocked": false,
       "linkedName": "Left Center Intake"
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -119.99999999999999
+    "rotation": -11.633633998940548
   },
   "useDefaultConstraints": true
 }

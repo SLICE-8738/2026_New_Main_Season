@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.AutoAlign;
+import frc.robot.commands.drive.AutoAlignTrench;
 import frc.robot.commands.indexer.SpinBothIndexer;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
@@ -48,6 +49,7 @@ import frc.robot.commands.intake.MoveIntake;
 import frc.robot.commands.intake.Unstucktake;
 import frc.robot.commands.shooter.AlignAndShoot;
 import frc.robot.commands.shooter.BasicShoot;
+import frc.robot.commands.shooter.Pass;
 import frc.robot.commands.shooter.Shoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -74,6 +76,7 @@ public class RobotContainer {
 
     /* Driving */
     public final AutoAlign m_AutoAlignHub;
+    public final AutoAlignTrench m_AutoAlignTrench;
 
     /* Intake */
     public final ExtendIntake m_ExtendIntake;
@@ -96,6 +99,7 @@ public class RobotContainer {
     /* Shooter */
     
     public final Shoot m_shoot;
+    public final Pass m_Pass;
     public final BasicShoot m_BasicShootHub;
 
     // Auto chooser
@@ -147,6 +151,7 @@ public class RobotContainer {
 
         /* Drive */
         m_AutoAlignHub = new AutoAlign(m_drivetrain, AutoAlign.Target.HUB, driverController);
+        m_AutoAlignTrench = new AutoAlignTrench(m_drivetrain, driverController);
 
         /* Intake */
         m_ExtendIntake    = new ExtendIntake(m_Intake);
@@ -172,6 +177,7 @@ public class RobotContainer {
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
         m_BasicShootHub = new BasicShoot(m_Shooter);
+        m_Pass = new Pass(m_Shooter);
         
 
         /* Autonomous */
@@ -233,8 +239,8 @@ public class RobotContainer {
 
         
         // TODO please please please fix the shooter so we can uncomment this code, Harrissh
-        Buttons.controller1_RightTrigger.whileTrue(m_BasicShootHub/*m_shoot*/
-            .alongWith(/*new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED),*/
+        Buttons.controller1_RightTrigger.whileTrue(m_shoot
+            .alongWith(
             new SequentialCommandGroup(
                 new WaitCommand(2), 
                     new ParallelCommandGroup(
@@ -257,6 +263,13 @@ public class RobotContainer {
         
         Buttons.controller1_povUp.whileTrue(m_TestExtendIntake);
         Buttons.controller1_povDown.whileTrue(m_TestRetractIntake);
+
+        Buttons.controller1_rightBumper.whileTrue(m_Pass.alongWith(m_AutoAlignTrench, new SequentialCommandGroup(
+                new WaitCommand(2), 
+                    new ParallelCommandGroup(
+                        new SpinBothIndexer(m_Indexer), 
+                            new SequentialCommandGroup(
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));
 
 
         // ============
@@ -289,7 +302,7 @@ public class RobotContainer {
             )
         );
 
-        m_Indexer.setDefaultCommand(m_stageOnePassive);
+        //m_Indexer.setDefaultCommand(m_stageOnePassive);
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.

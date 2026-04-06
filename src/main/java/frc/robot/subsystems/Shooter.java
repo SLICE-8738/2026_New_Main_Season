@@ -121,6 +121,27 @@ public class Shooter extends SubsystemBase {
         topRightShooterMotor.stopMotor();
     }
 
+    public double distanceFromTrench(){
+        boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;
+        double distance = -1;
+        // get distance to each trench
+        if (isBlue){
+            Translation2d leftTarget = Constants.AlignTargets.BLUE_TRENCH_LEFT;
+            Translation2d rightTarget = Constants.AlignTargets.BLUE_TRENCH_RIGHT;
+            double leftDistance = m_drivetrain.getDistanceTo(leftTarget);
+            double rightDistance = m_drivetrain.getDistanceTo(rightTarget);
+            distance = (leftDistance < rightDistance) ? leftDistance : rightDistance;
+        } else {
+            Translation2d leftTarget = Constants.AlignTargets.RED_TRENCH_LEFT;
+            Translation2d rightTarget = Constants.AlignTargets.RED_TRENCH_RIGHT;
+            double leftDistance = m_drivetrain.getDistanceTo(leftTarget);
+            double rightDistance = m_drivetrain.getDistanceTo(rightTarget);
+            distance = (leftDistance < rightDistance) ? leftDistance : rightDistance;
+        }
+
+        return distance;
+    }
+
     public double distanceFromHub() {
         boolean isBlue = DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue;
         Translation2d targetPosition = isBlue ? Constants.AlignTargets.BLUE_HUB : Constants.AlignTargets.RED_HUB;
