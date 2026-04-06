@@ -22,6 +22,7 @@ public class Shoot extends Command {
   private GenericEntry m_ShuffleboardRPM;
   private SimpleWidget m_ShuffleboardDistance;
   private SimpleWidget m_ShuffleboardGoodSpeed;
+  private SimpleWidget m_ShuffleboardTargetRPM;
   private final CommandSwerveDrivetrain m_drivetrain;
   /** Creates a new Shoot. */
   public Shoot(Shooter shooter, CommandSwerveDrivetrain drivetrain) {
@@ -32,6 +33,7 @@ public class Shoot extends Command {
     m_ShuffleboardRPM = m_ShuffleboardTab.add("RPM: ", -1200).getEntry();
     m_ShuffleboardDistance = m_ShuffleboardTab.add("Distance: ", -1.0);
     m_ShuffleboardGoodSpeed = m_ShuffleboardTab.add("Last good Speed", m_Shooter.getGoodSpeed());
+    m_ShuffleboardTargetRPM = m_ShuffleboardTab.add("Target RPM", m_Shooter.getTargetVelocity());
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(m_Shooter);
   }
@@ -49,6 +51,7 @@ public class Shoot extends Command {
     // TODO uncomment and recomment depending on which mode the shooter is in
     // double angle = 28; //Constants.ShooterConstants.SHOOTER_MAP.get(distance).hoodAngle();
     double rpm = /* m_ShuffleboardRPM.getDouble(-1200); */ Constants.ShooterConstants.SHOOTER_MAP.get(distance).rpm();
+    m_ShuffleboardTargetRPM.getEntry().setDouble(rpm);
     // double angle = m_ShuffleboardAngle.getDouble(12);
     // double rps = m_ShuffleboardRPM.getDouble(-1200) / 60;
     if (distance == -1) {

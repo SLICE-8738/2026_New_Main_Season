@@ -26,7 +26,7 @@ public class Unstucktake extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_Intake.spinRoller(-0.5 * Constants.IntakeConstants.ROLLER_SPEED);
+    m_Intake.spinRoller(-0.15);
   }
 
   // Called once the command ends or is interrupted.

@@ -35,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.AutoAlignTrench;
+import frc.robot.commands.indexer.ReverseKicker;
 import frc.robot.commands.indexer.SpinBothIndexer;
 import frc.robot.commands.indexer.SpinStageOne;
 import frc.robot.commands.indexer.SpinStageTwo;
@@ -230,7 +231,7 @@ public class RobotContainer {
         // ================
 
         /* Drivetrain */
-        Buttons.controller1_leftBumper.whileTrue(m_AutoAlignHub);
+        // Buttons.controller1_leftBumper.whileTrue(m_AutoAlignHub);
 
         // Reset the field-centric heading on minus press.
         Buttons.controller1_minusButton.onTrue(m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
@@ -240,7 +241,7 @@ public class RobotContainer {
         
         // TODO please please please fix the shooter so we can uncomment this code, Harrissh
         Buttons.controller1_RightTrigger.whileTrue(m_shoot
-            .alongWith(
+            .alongWith(m_AutoAlignHub,
             new SequentialCommandGroup(
                 new WaitCommand(2), 
                     new ParallelCommandGroup(
@@ -302,7 +303,8 @@ public class RobotContainer {
             )
         );
 
-        //m_Indexer.setDefaultCommand(m_stageOnePassive);
+        m_Indexer.setDefaultCommand(m_stageOnePassive.alongWith(new ReverseKicker(m_Indexer)));
+
 
         // Idle while the robot is disabled. This ensures the configured
         // neutral mode is applied to the drive motors while disabled.
@@ -331,13 +333,13 @@ public class RobotContainer {
 
         */
 
-        
+        /*
         driveIntakeTrigger.whileTrue(m_drivetrain.applyRequest(() ->
                 drive.withVelocityX(driverController.getRawAxis(1) * Constants.DriveConstants.MAX_INTAKE_LINEAR_VELOCITY) // Drive forward with negative Y (forward) // Left Y
                      .withVelocityY(driverController.getRawAxis(0) * Constants.DriveConstants.MAX_INTAKE_LINEAR_VELOCITY) // Drive left with negative X (left) // Left X
                      .withRotationalRate(-driverController.getRawAxis(4) * MaxAngularRate) // Drive counterclockwise with negative X (left) // Right X
             ));
-        
+        */
         
     }
 

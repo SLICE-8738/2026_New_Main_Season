@@ -15,6 +15,7 @@ import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.swerve.SwerveModule;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
@@ -24,6 +25,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,6 +40,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -102,15 +105,18 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Constants.AlignTargets.HEADING_KI,
             Constants.AlignTargets.HEADING_KD);
 
-    //private Pigeon2 m_Pigeon2 = new Pigeon2(Constants.DriveConstants.GYRO_ID);
+    private Pigeon2 m_Pigeon2 = new Pigeon2(Constants.DriveConstants.GYRO_ID);
     
     /* ShuffleBoard Stuffs */
     ShuffleboardTab driverTab;
     ComplexWidget fieldWidget;
     public Field2d m_Field;
 
+    SwerveModuleConstants<?, ?, ?>[] swerveModules;
+
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants,
             SwerveModuleConstants<?, ?, ?>... modules) {
+        
         super(drivetrainConstants, modules);
         configureAutoBuilder();
         configHeadingPID();
@@ -122,14 +128,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         fieldWidget = driverTab.add("Field", m_Field)
             .withWidget(BuiltInWidgets.kField);
 
-        //m_Pigeon2 = new Pigeon2(Constants.)
-        /* 
+        swerveModules = modules;
+
+        
         if(DriverStation.getAlliance().get() == Alliance.Blue){
             m_Pigeon2.setYaw(0);
         } else {
             m_Pigeon2.setYaw(180);
         }
-        */
+        
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -145,13 +152,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         fieldWidget = driverTab.add("Field", m_Field)
             .withWidget(BuiltInWidgets.kField);
 
-        /* 
+
+        swerveModules = modules;
+        
         if(DriverStation.getAlliance().get() == Alliance.Blue){
             m_Pigeon2.setYaw(0);
         } else {
             m_Pigeon2.setYaw(180);
         }
-        */
+        
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -169,13 +178,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         fieldWidget = driverTab.add("Field", m_Field)
             .withWidget(BuiltInWidgets.kField);
 
-        /* 
+        swerveModules = modules;
+        
         if(DriverStation.getAlliance().get() == Alliance.Blue){
             m_Pigeon2.setYaw(0);
         } else {
             m_Pigeon2.setYaw(180);
         }
-        */
+        
     }
 
     private void configHeadingPID() {
@@ -241,6 +251,29 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public Command sysIdDynamic(SysIdRoutine.Direction direction) {
         return m_sysIdRoutineToApply.dynamic(direction);
     }
+
+    /*
+    public void xSwerve() {
+        Rotation2d[] rotations = {
+            Rotation2d.fromDegrees(45),
+            Rotation2d.fromDegrees(-45),
+            Rotation2d.fromDegrees(-45),
+            Rotation2d.fromDegrees(45),
+        };
+        
+        for(int i=0; i < swerveModules.length; i++){
+            var theMod = swerveModules[i];
+            theMod.
+        }
+
+        /*
+        for (int i = 0; i < ; i++) {
+            SwerveRequest[i].setDesiredState(new SwerveModuleState(0, rotations[i]), false);
+        }
+        
+    }
+    */
+
 
     // Pose / odometry helpers
 
@@ -376,7 +409,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         // Vision update with MegaTag2 if tags visible
         
+        var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
+            
+            if (limelightPose != null && limelightPose.tagCount > 0 ) {
+                addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+            }
+
+        /* 
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+            //LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
             var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
             
             if (limelightPose != null && limelightPose.tagCount > 0 ) {
@@ -384,13 +425,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             }
             
         } else if (DriverStation.getAlliance().get().equals(Alliance.Blue)) {
-            //LimelightHelpers.SetRobotOrientation("limelight-shooter", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+            //LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
             var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-trench");
             
             if (limelightPose != null && limelightPose.tagCount > 0) {
                 addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }   
-            
+        */    
 
         
         
@@ -398,4 +439,3 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
        }
     }
 
-}

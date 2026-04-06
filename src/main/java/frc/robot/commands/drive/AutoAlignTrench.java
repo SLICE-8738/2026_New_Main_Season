@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 
 import java.lang.annotation.Target;
 
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Translation2d;
@@ -33,6 +34,8 @@ public class AutoAlignTrench extends Command {
 
     private ShuffleboardTab driverTab;
 
+    private Pigeon2 m_Pigeon2;
+
     // Field-centric request: driver controls X/Y, heading PID supplies rotation
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -45,6 +48,7 @@ public class AutoAlignTrench extends Command {
         m_driverController = driverController;
 
         driverTab = Shuffleboard.getTab("Driver");
+        m_Pigeon2 = new Pigeon2(Constants.DriveConstants.GYRO_ID);
 
         addRequirements(m_drivetrain);
     // Use addRequirements() here to declare subsystem dependencies.
@@ -81,6 +85,14 @@ public class AutoAlignTrench extends Command {
             .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
             .withRotationalRate(headingCorrection));
     
+    
+    LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
+    if (limelightPose != null && limelightPose.tagCount > 0 ) {
+      m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+    }
+
+    /*
     if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
             var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this out
             if (limelightPose != null && limelightPose.tagCount > 0 ) {
@@ -94,11 +106,18 @@ public class AutoAlignTrench extends Command {
             }   
             
        }
+    */
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
+    if (limelightPose != null && limelightPose.tagCount > 0 ) {
+      m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+    }
+    /*
     if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
       var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this out
       if (limelightPose != null && limelightPose.tagCount > 0 ) {
@@ -110,8 +129,9 @@ public class AutoAlignTrench extends Command {
       if (limelightPose != null && limelightPose.tagCount > 0) {
           m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
       }   
-      
+  
   }
+  */
   }
 
   // Returns true when the command should end.

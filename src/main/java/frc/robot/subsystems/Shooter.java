@@ -272,7 +272,7 @@ public class Shooter extends SubsystemBase {
         SmartDashboard.putBoolean("Shooter/TuningMode", tuningMode);
 
         SmartDashboard.putNumber("Shooter velocity: ", getFlywheelSpeed());
-        SmartDashboard.putNumber("Shooter supposed velocity: ", targetSpeed);
+        SmartDashboard.putNumber("Shooter supposed velocity: ", getTargetVelocity());
 
 
 

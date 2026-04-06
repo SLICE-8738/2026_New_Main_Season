@@ -66,7 +66,7 @@ public final class Constants {
         public static final int STAGE_TWO_MOTOR_ID = 1;
 
         public static final double STAGE_ONE_INTAKE_SPEED = 0.9;
-        public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.4;
+        public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.2;
         public static final double STAGE_TWO_INTAKE_SPEED = 1;
 
         public static final int INDEXER_STATOR_CURRENT_LIMIT = 80;
@@ -203,7 +203,7 @@ public final class Constants {
         public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 60;
         public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 40;
 
-        public static final double FLYWHEEL_GEAR_RATIO = 1;
+        public static final double FLYWHEEL_GEAR_RATIO = 24.0/22.0;//22.0/24.0;
         public static final double PIVOT_GEAR_RATIO = 4.75 * 16.5;
         public static final double POSITION_CONVERSION_FACTOR = 360; // Degrees
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // Degrees per Second
@@ -227,7 +227,7 @@ public final class Constants {
             SHOOTER_MAP.put(2.064, new FullShooterParams(-2250.0));
             SHOOTER_MAP.put(2.516, new FullShooterParams(-2375.0));
             SHOOTER_MAP.put(2.730, new FullShooterParams(-2400.0));
-            SHOOTER_MAP.put(3.02, new FullShooterParams(-2425.0));
+            SHOOTER_MAP.put(3.02,  new FullShooterParams(-2425.0));
             SHOOTER_MAP.put(3.184, new FullShooterParams(-2500.0));
             SHOOTER_MAP.put(3.474, new FullShooterParams(-2550.0));
             SHOOTER_MAP.put(3.999, new FullShooterParams(-2675.0));

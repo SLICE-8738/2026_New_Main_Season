@@ -56,7 +56,7 @@ public class Intake extends TalonFXPositionalSubsystem {
    * @param speed speed to set the motor to (-1.0 to 1.0)
    */
   public void spinRoller(double speed) {
-    rotationMotor.setControl(rollerRequest.withOutput(speed));
+    rotationMotor.setControl(rollerRequest.withOutput(speed).withEnableFOC(true));
   }
 
 
