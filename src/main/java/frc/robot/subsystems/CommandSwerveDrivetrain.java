@@ -252,7 +252,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
-    /*
+    
+    /**
+     * {@link SwerveRequest}
+     */
     public void xSwerve() {
         Rotation2d[] rotations = {
             Rotation2d.fromDegrees(45),
@@ -261,18 +264,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             Rotation2d.fromDegrees(45),
         };
         
-        for(int i=0; i < swerveModules.length; i++){
-            var theMod = swerveModules[i];
-            theMod.
+        for (int i = 0; i < swerveModules.length; i++){
+            var requestModuleDirection = new SwerveRequest.PointWheelsAt().withModuleDirection(rotations[i]);
+            requestModuleDirection.applyNative(swerveModules[i].SteerMotorId);
+            
         }
-
-        /*
-        for (int i = 0; i < ; i++) {
-            SwerveRequest[i].setDesiredState(new SwerveModuleState(0, rotations[i]), false);
-        }
-        
     }
-    */
+    
 
 
     // Pose / odometry helpers
@@ -407,14 +405,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Shuffleboard.getTab("Driver").add("The field", m_Field);
         
 
-        // Vision update with MegaTag2 if tags visible
+        // Vision update with MegaTag if tags visible
         
-        var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
+        var limelightPose1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
             
-            if (limelightPose != null && limelightPose.tagCount > 0 ) {
-                addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
-            }
+        if (limelightPose1 != null && limelightPose1.tagCount > 0 ) {
+            addVisionMeasurement(limelightPose1.pose, limelightPose1.timestampSeconds);
+        }
 
+        /*
+        var limelightPose2 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub");
+
+        if (limelightPose2 != null && limelightPose2.tagCount > 0 ) {
+            addVisionMeasurement(limelightPose2.pose, limelightPose2.timestampSeconds);
+        }
+        */
+        
         /* 
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
             //LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);

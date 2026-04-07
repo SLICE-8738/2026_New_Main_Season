@@ -151,6 +151,10 @@ public class CTREConfigs {
         extenderConfigs.CurrentLimits.SupplyCurrentLimit = Constants.IntakeConstants.EXTENDER_SUPPLY_CURRENT_LIMIT;
 
         // Roller motor configurations
+        rollerConfigs.Slot0.kP = Constants.IntakeConstants.ROLLER_KP;
+        rollerConfigs.Slot0.kI = Constants.IntakeConstants.ROLLER_KI;
+        rollerConfigs.Slot0.kD = Constants.IntakeConstants.ROLLER_KD;
+
         rollerConfigs.Feedback.SensorToMechanismRatio = Constants.IntakeConstants.ROLLER_GEAR_RATIO;
         rollerConfigs.CurrentLimits.StatorCurrentLimit = Constants.IntakeConstants.ROLLER_STATOR_CURRENT_LIMIT;
         rollerConfigs.CurrentLimits.SupplyCurrentLimit = Constants.IntakeConstants.ROLLER_SUPPLY_CURRENT_LIMIT;

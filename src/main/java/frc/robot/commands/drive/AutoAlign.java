@@ -86,11 +86,19 @@ public class AutoAlign extends Command {
                 .withVelocityY(m_driverController.getLeftX() * MaxSpeed)
                 .withRotationalRate(headingCorrection));
         
-        LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+        LimelightHelpers.SetRobotOrientation("limelight-hub", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
         var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
         if (limelightPose != null && limelightPose.tagCount > 0 ) {
             m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
         }
+
+        /*
+        var limelightPose2 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub");
+
+        if (limelightPose2 != null && limelightPose2.tagCount > 0 ) {
+            m_drivetrain.addVisionMeasurement(limelightPose2.pose, limelightPose2.timestampSeconds);
+        }
+        */
 
         /*
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
@@ -118,6 +126,15 @@ public class AutoAlign extends Command {
         if (limelightPose != null && limelightPose.tagCount > 0 ) {
              m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
         }
+
+        /*
+        var limelightPose2 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub");
+        
+        if (limelightPose2 != null && limelightPose2.tagCount > 0 ) {
+            m_drivetrain.addVisionMeasurement(limelightPose2.pose, limelightPose2.timestampSeconds);
+        }
+        */
+
         /*
         if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
             LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);

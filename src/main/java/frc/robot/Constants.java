@@ -182,6 +182,9 @@ public final class Constants {
         public static final double ROLLER_SPEED = 1.0;//0.625;//0.9;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
         public static final double ROLLER_GEAR_RATIO = 2.0;
+        public static final double ROLLER_KP = 1.0;
+        public static final double ROLLER_KI = 0.0;
+        public static final double ROLLER_KD = 0.0;
         public static final int ROLLER_STATOR_CURRENT_LIMIT = 30;
         public static final int ROLLER_SUPPLY_CURRENT_LIMIT = 20;
     }

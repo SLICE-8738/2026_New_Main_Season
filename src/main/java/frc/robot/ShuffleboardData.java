@@ -54,6 +54,7 @@ public class ShuffleboardData extends SubsystemBase {
     SimpleWidget intakeRunning;
     SimpleWidget intakeExtenderSpeed;
     SimpleWidget intakeRollerSpeed;
+    SimpleWidget intakeRollerTargetSpeed;
 
     /* Indexer */
     SimpleWidget stageOneSpeed;
@@ -111,6 +112,7 @@ public class ShuffleboardData extends SubsystemBase {
             .withWidget(BuiltInWidgets.kBooleanBox);
         intakeExtenderSpeed = debugTab.add("Intake Extender Speed", m_Intake.getVelocity()[0]);
         intakeRollerSpeed = debugTab.add("Intake Roller Speed", m_Intake.getRollerVelocity());
+        intakeRollerTargetSpeed = debugTab.add("Intake Roller Target Speed", m_Intake.getRollerTargetSpeed());
         
         /* Indexer */
         stageOneSpeed = debugTab.add("Indexer Floor Speed", m_Indexer.getStageOneSpeed());
@@ -120,7 +122,6 @@ public class ShuffleboardData extends SubsystemBase {
         ///////////////////////////
         /// Shooter Tab Values ////
         ///////////////////////////
-
 
         shooterRPM = shooterTuning.add("Shooter RPM", m_Shooter.getFlywheelSpeed());
 
@@ -155,6 +156,7 @@ public class ShuffleboardData extends SubsystemBase {
         intakeRunning.getEntry().setBoolean(m_Intake.getCurrentCommand() != null);
         intakeExtenderSpeed.getEntry().setDouble(m_Intake.getVelocity()[0]);
         intakeRollerSpeed.getEntry().setDouble(m_Intake.getRollerVelocity());
+        intakeRollerTargetSpeed.getEntry().setDouble(m_Intake.getRollerTargetSpeed());
 
         /* Indexer */
         stageOneSpeed.getEntry().setDouble(m_Indexer.getStageOneSpeed());

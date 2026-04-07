@@ -87,7 +87,7 @@ public class AutoAlignTrench extends Command {
     
     
     LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
-    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
+    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-trench"); //TODO figure this out
     if (limelightPose != null && limelightPose.tagCount > 0 ) {
       m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
     }

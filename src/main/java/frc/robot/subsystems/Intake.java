@@ -25,7 +25,10 @@ public class Intake extends TalonFXPositionalSubsystem {
 
   private TalonFX rotationMotor;
 
-  DutyCycleOut rollerRequest = new DutyCycleOut(0).withEnableFOC(true);
+  //DutyCycleOut rollerRequest = new DutyCycleOut(0).withEnableFOC(true);
+
+  private final VelocityVoltage rollerVoltage = new VelocityVoltage(0).withEnableFOC(true);
+  private double rollerTargetSpeed;
 
   /** Creates a new Intake. */
   public Intake() {
@@ -40,6 +43,7 @@ public class Intake extends TalonFXPositionalSubsystem {
       Constants.IntakeConstants.VELOCITY_CONVERSION_FACTOR,
       Constants.CTRE_CONFIGS.extenderConfigs
     );
+    rollerTargetSpeed = 0;
     setEncoderPosition(0);
     
 
@@ -56,19 +60,26 @@ public class Intake extends TalonFXPositionalSubsystem {
    * @param speed speed to set the motor to (-1.0 to 1.0)
    */
   public void spinRoller(double speed) {
-    rotationMotor.setControl(rollerRequest.withOutput(speed).withEnableFOC(true));
+    rollerTargetSpeed = speed;
+    rotationMotor.setControl(rollerVoltage.withVelocity(speed));
+    //rotationMotor.setControl(rollerRequest.withOutput(speed).withEnableFOC(true));
   }
 
 
   public void stopRoller() {
     rotationMotor.stopMotor();
   }
+
   /**
    * Moves the intake to the set position
    * @param position position to have the intake move to
    */
   public void moveIntakeToPosition(double position) {
     setPosition(position);
+  }
+
+  public double getRollerTargetSpeed(){
+    return rollerTargetSpeed;
   }
 
   public void extendSetSpeed(double speed){
