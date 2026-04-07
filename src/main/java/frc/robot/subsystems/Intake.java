@@ -57,7 +57,7 @@ public class Intake extends TalonFXPositionalSubsystem {
 
   /**
    * Sets speed of rotation motor
-   * @param speed speed to set the motor to (-1.0 to 1.0)
+   * @param speed speed to set the motor to in rotations per second
    */
   public void spinRoller(double speed) {
     rollerTargetSpeed = speed;

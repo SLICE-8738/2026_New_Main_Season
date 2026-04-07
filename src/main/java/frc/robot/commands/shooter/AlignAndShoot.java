@@ -105,7 +105,7 @@ public class AlignAndShoot extends Command {
                 .withVelocityY(m_driverController.getLeftX() * MaxSpeed * 0.6)
                 .withRotationalRate(headingCorrection));
         
-        if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
+        /*if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
             var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-shooter"); //TODO figure this ou
             if (limelightPose != null && limelightPose.tagCount > 0 ) {
                 m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
@@ -117,7 +117,8 @@ public class AlignAndShoot extends Command {
                 m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
             }   
             
-       }
+       }*/
+      
 
         //m_shooter.spinFlywheels(m_shooter.getTargetVelocity());
 

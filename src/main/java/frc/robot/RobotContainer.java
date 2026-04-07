@@ -10,6 +10,7 @@ import static edu.wpi.first.units.Units.RotationsPerSecond;
 
 import java.util.HashMap;
 import java.util.concurrent.locks.AbstractQueuedLongSynchronizer.ConditionObject;
+import java.util.function.BooleanSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -18,6 +19,7 @@ import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
+import edu.wpi.first.wpilibj.RuntimeType;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj.PS4Controller.Button;
@@ -25,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
@@ -113,6 +116,7 @@ public class RobotContainer {
     private Trigger oscillateTrigger;
     private Trigger indexerTrigger;
     private Trigger controllerRumbleTrigger;
+    private Trigger almostActive;
 
     /* Other Commands */
     //private Command autoCommand;
@@ -212,7 +216,7 @@ public class RobotContainer {
         oscillateTrigger = new Trigger(() -> m_Indexer.getCurrentCommand() != null);
         indexerTrigger = new Trigger(() -> m_Shooter.getCurrentCommand() != null && m_Intake.isStowed() == false);
         controllerRumbleTrigger = new Trigger(() -> m_Shooter.isHubAlmostActive());
-
+        almostActive = new Trigger(() -> m_Shooter.isHubAlmostActive());
 
 
         CommandScheduler.getInstance().schedule(FollowPathCommand.warmupCommand());
@@ -240,15 +244,28 @@ public class RobotContainer {
 
         
         // TODO please please please fix the shooter so we can uncomment this code, Harrissh
-        Buttons.controller1_RightTrigger.whileTrue(m_shoot
+        /*Buttons.controller1_RightTrigger.whileTrue(m_shoot
             .alongWith(m_AutoAlignHub,
             new SequentialCommandGroup(
                 new WaitCommand(2), 
                     new ParallelCommandGroup(
                         new SpinBothIndexer(m_Indexer), 
                             new SequentialCommandGroup(
-                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));*/
        
+        Buttons.controller1_RightTrigger.whileTrue(new ConditionalCommand(m_Pass.alongWith(m_AutoAlignTrench, new SequentialCommandGroup(
+                new WaitCommand(2), 
+                    new ParallelCommandGroup(
+                        new SpinBothIndexer(m_Indexer), 
+                            new SequentialCommandGroup(
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))), m_shoot
+            .alongWith(m_AutoAlignHub,
+            new SequentialCommandGroup(
+                new WaitCommand(2), 
+                    new ParallelCommandGroup(
+                        new SpinBothIndexer(m_Indexer), 
+                            new SequentialCommandGroup(
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))), () -> m_drivetrain.detectOutsideAlliance()));
         
         /* Intake */
         
@@ -265,15 +282,17 @@ public class RobotContainer {
         Buttons.controller1_povUp.whileTrue(m_TestExtendIntake);
         Buttons.controller1_povDown.whileTrue(m_TestRetractIntake);
 
-        Buttons.controller1_rightBumper.whileTrue(m_Pass.alongWith(m_AutoAlignTrench, new SequentialCommandGroup(
+        /*Buttons.controller1_rightBumper.whileTrue(m_Pass.alongWith(m_AutoAlignTrench, new SequentialCommandGroup(
                 new WaitCommand(2), 
                     new ParallelCommandGroup(
                         new SpinBothIndexer(m_Indexer), 
                             new SequentialCommandGroup(
-                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));
+                                new WaitCommand(0.25), new IntakeWhileShooting(m_Intake))))));*/
 
+        
+        almostActive.onTrue(new SequentialCommandGroup(Commands.runOnce(() -> Buttons.controller1.setRumble(RumbleType.kLeftRumble, 1.0)), new WaitCommand(1.0), Commands.runOnce(() -> Buttons.controller1.setRumble(RumbleType.kLeftRumble, 0))));
+        almostActive.onFalse(new SequentialCommandGroup(Commands.runOnce(() -> Buttons.controller1.setRumble(RumbleType.kRightRumble, 1.0)), new WaitCommand(1.0), Commands.runOnce(() -> Buttons.controller1.setRumble(RumbleType.kRightRumble, 0))));
 
-        Buttons.controller1_povLeft.whileTrue(m_drivetrain.runOnce(m_drivetrain::xSwerve));
         // ============
         // Other Triggers
         // ============

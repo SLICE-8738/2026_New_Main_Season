@@ -20,6 +20,7 @@ import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -28,6 +29,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
+import edu.wpi.first.math.util.Units;
+import edu.wpi.first.units.DistanceUnit;
+import edu.wpi.first.units.Measure;
+import edu.wpi.first.units.Unit;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -136,7 +141,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } else {
             m_Pigeon2.setYaw(180);
         }
-        
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -160,7 +164,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } else {
             m_Pigeon2.setYaw(180);
         }
-        
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -185,7 +188,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         } else {
             m_Pigeon2.setYaw(180);
         }
-        
     }
 
     private void configHeadingPID() {
@@ -269,9 +271,27 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             requestModuleDirection.applyNative(swerveModules[i].SteerMotorId);
             
         }
+
     }
     
-
+    /**
+     * Detects if the robot is outside of the current alliance zone.
+     * @return Returns true if the robot is outside of the current alliance zone.
+     */
+    public boolean detectOutsideAlliance(){
+        Pose2d robotPose = getPose();
+        if (DriverStation.getAlliance().get() == Alliance.Red){
+            if (robotPose.getMeasureX().in(Meters) >= Constants.FieldConstants.RED_OUTSIDE_ALLIANCE_ZONE){
+                return true;
+            }
+            return false;
+        } else {
+            if (robotPose.getMeasureX().in(Meters) <= Constants.FieldConstants.BLUE_OUTSIDE_ALLIANCE_ZONE){
+                return true;
+            }
+            return false;
+        }
+    }
 
     // Pose / odometry helpers
 
@@ -388,6 +408,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         super.resetPose(pose);
     }
 
+    private void updateVisionWithCamera(String limelightName){
+        LimelightHelpers.SetRobotOrientation(limelightName, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate vision1 = LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+
+        if (vision1 == null || vision1.tagCount == 0) return;
+
+        if (Math.toDegrees(Math.abs(getState().Speeds.omegaRadiansPerSecond)) > 360) return;
+
+        double avgDist = vision1.avgTagDist;
+        double xyStdDev = 0.3 + (avgDist * 0.1);
+
+        addVisionMeasurement(vision1.pose, vision1.timestampSeconds, VecBuilder.fill(xyStdDev, xyStdDev, 2.0));
+    }
+
     @Override
     public void periodic() {
         if (!m_hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
@@ -400,18 +434,41 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-        m_Field.setRobotPose(getState().Pose);
         
         //Shuffleboard.getTab("Driver").add("The field", m_Field);
-        
 
         // Vision update with MegaTag if tags visible
         
-        var limelightPose1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
-            
-        if (limelightPose1 != null && limelightPose1.tagCount > 0 ) {
-            addVisionMeasurement(limelightPose1.pose, limelightPose1.timestampSeconds);
-        }
+        // We should use the trench limelight unless the hub limelight would be more accurate.
+        // This code determines that.
+        /*var limelightPose1 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-trench"); //TODO figure this ou
+        var limelightPose2 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub");
+
+        boolean tryTwo = false;    
+
+        if ((limelightPose1 != null) && (limelightPose2 != null)){
+            if (limelightPose1.tagCount == 1 && limelightPose1.rawFiducials.length == 1) { // If we can see one tag...
+                if ((limelightPose1.rawFiducials.length > 0) && (limelightPose2.rawFiducials.length > 0) && (limelightPose1.rawFiducials[0].ambiguity > .7)){ // and if the ambiguity is too high...
+                    tryTwo = limelightPose1.rawFiducials[0].ambiguity > limelightPose2.rawFiducials[0].ambiguity; // Use the second tag if its ambiguity is lower
+                }
+                if ((limelightPose1.rawFiducials.length > 0) && (limelightPose2.rawFiducials.length > 0) && (limelightPose1.rawFiducials[0].distToCamera > 3)){ // If the distance is too high...
+                    tryTwo = limelightPose1.rawFiducials[0].distToCamera > limelightPose2.rawFiducials[0].distToCamera; // Use the second tag if its distance is lower
+                }
+            }
+            if (limelightPose1.tagCount == 0){ // If we cannot see any tags...
+                tryTwo = true; // Try two
+            }
+
+            if (!tryTwo){ // If we haven't failed the first limelight...
+                addVisionMeasurement(limelightPose1.pose, limelightPose1.timestampSeconds); // ...add it to the pose.
+            } 
+            else if (tryTwo) { // Otherwise...
+                addVisionMeasurement(limelightPose2.pose, limelightPose2.timestampSeconds); // ...add the second limelight to the pose.
+            }
+        }*/
+        m_Field.setRobotPose(getState().Pose);
+        updateVisionWithCamera("limelight-trench");
+        updateVisionWithCamera("limelight-hub");
 
         /*
         var limelightPose2 = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub");

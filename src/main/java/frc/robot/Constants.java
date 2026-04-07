@@ -44,10 +44,10 @@ public final class Constants {
         public static final Translation2d RED_HUB = new Translation2d(4.625, 4.034);
         public static final Translation2d BLUE_HUB = new Translation2d(11.915, 4.034);
         
-        public static final Translation2d RED_TRENCH_LEFT = new Translation2d(4.625, 0.645);
-        public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(4.625, 7.425);
-        public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(11.915, 0.645);
-        public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(11.915, 7.425);
+        public static final Translation2d RED_TRENCH_LEFT = new Translation2d(4.625, 2.395);
+        public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(4.625, 5.675);
+        public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(11.915, 2.395);
+        public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(11.915, 5.675);
 
         public static final Translation2d BLUE_PASS_LEFT = new Translation2d(3.0, 6.5);
         public static final Translation2d BLUE_PASS_RIGHT = new Translation2d(3.0, 1.5);
@@ -179,14 +179,14 @@ public final class Constants {
         public static final double OSCILLATION_AMOUNT = .2; // Meters; how far it goes out
         public static final double OSCILLATION_DIFF = .1; // Meters; how much further it goes in
         // Roller motor constants
-        public static final double ROLLER_SPEED = 1.0;//0.625;//0.9;
+        public static final double ROLLER_SPEED = 6000.0 / 60.0;//0.625;//0.9;
         public static final double ROLLER_RETRACT_SPEED = 0.0;
         public static final double ROLLER_GEAR_RATIO = 2.0;
-        public static final double ROLLER_KP = 1.0;
+        public static final double ROLLER_KP = 100.0;
         public static final double ROLLER_KI = 0.0;
-        public static final double ROLLER_KD = 0.0;
-        public static final int ROLLER_STATOR_CURRENT_LIMIT = 30;
-        public static final int ROLLER_SUPPLY_CURRENT_LIMIT = 20;
+        public static final double ROLLER_KD = 10.0;
+        public static final int ROLLER_STATOR_CURRENT_LIMIT = 69;
+        public static final int ROLLER_SUPPLY_CURRENT_LIMIT = 40;
     }
 
     public static class ShooterConstants {
@@ -294,7 +294,11 @@ public final class Constants {
         public static final double HUB_APRILTAG_HEIGHT = 1.124; // Metres
 
         // How long to speed up shooter before hub active
-        public static final double SPEED_SHOOTER_AT = 4; // Seconds
+        public static final double SPEED_SHOOTER_AT = 5; // Seconds
+
+        // Distances to check if we are past the alliance zone
+        public static final double RED_OUTSIDE_ALLIANCE_ZONE = 5.209; // Metres
+        public static final double BLUE_OUTSIDE_ALLIANCE_ZONE = 11.305; // Metres
 
     }
 

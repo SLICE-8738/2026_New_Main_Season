@@ -86,11 +86,11 @@ public class AutoAlignTrench extends Command {
             .withRotationalRate(headingCorrection));
     
     
-    LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
-    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-trench"); //TODO figure this out
-    if (limelightPose != null && limelightPose.tagCount > 0 ) {
-      m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
-    }
+    // LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    // var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-trench"); //TODO figure this out
+    // if (limelightPose != null && limelightPose.tagCount > 0 ) {
+    //   m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+    // }
 
     /*
     if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
@@ -112,11 +112,11 @@ public class AutoAlignTrench extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
-    var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
-    if (limelightPose != null && limelightPose.tagCount > 0 ) {
-      m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
-    }
+    // LimelightHelpers.SetRobotOrientation("limelight-trench", m_Pigeon2.getYaw().getValueAsDouble(), 0.0, 0.0, 0.0, 0.0, 0.0);
+    // var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2("limelight-hub"); //TODO figure this out
+    // if (limelightPose != null && limelightPose.tagCount > 0 ) {
+    //   m_drivetrain.addVisionMeasurement(limelightPose.pose, limelightPose.timestampSeconds);
+    // }
     /*
     if (DriverStation.getAlliance().get().equals(Alliance.Red)) {
       var limelightPose = LimelightHelpers.getBotPoseEstimate_wpiRed("limelight-hub"); //TODO figure this out
