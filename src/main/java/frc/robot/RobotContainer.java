@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.drive.AutoAlign;
 import frc.robot.commands.drive.AutoAlignTrench;
+import frc.robot.commands.drive.SwerveX;
 import frc.robot.commands.indexer.ReverseKicker;
 import frc.robot.commands.indexer.SpinBothIndexer;
 import frc.robot.commands.indexer.SpinStageOne;
@@ -81,6 +82,8 @@ public class RobotContainer {
     /* Driving */
     public final AutoAlign m_AutoAlignHub;
     public final AutoAlignTrench m_AutoAlignTrench;
+
+    private final SwerveX m_SwerveX;
 
     /* Intake */
     public final ExtendIntake m_ExtendIntake;
@@ -158,6 +161,8 @@ public class RobotContainer {
         m_AutoAlignHub = new AutoAlign(m_drivetrain, AutoAlign.Target.HUB, driverController);
         m_AutoAlignTrench = new AutoAlignTrench(m_drivetrain, driverController);
 
+        m_SwerveX = new SwerveX(m_drivetrain);
+
         /* Intake */
         m_ExtendIntake    = new ExtendIntake(m_Intake);
         m_RetractIntake   = new RetractIntake(m_Intake);
@@ -199,12 +204,13 @@ public class RobotContainer {
         /*
         TODO more auto stuff to figure the heck out of
         */
+        NamedCommands.registerCommand("Reset Gyro", m_drivetrain.runOnce(m_drivetrain::seedFieldCentric));
         NamedCommands.registerCommand("Intake", m_IntakeCommand);
         NamedCommands.registerCommand("Spin Stage One", m_spinStageOne);
         NamedCommands.registerCommand("Spin Stage Two", m_spinStageTwo);
         NamedCommands.registerCommand("Stop Intake", m_Stoptake);
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
-        //NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
+        NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Shoot", m_shoot);
         
 
@@ -273,6 +279,8 @@ public class RobotContainer {
         Buttons.controller1_AButton.onTrue(new ParallelRaceGroup(m_RetractIntake, new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED)));
         
         Buttons.controller1_povRight.whileTrue(m_Unstucktake);
+
+        Buttons.controller1_XButton.onTrue(m_SwerveX);
 
         /* Indexer */
 

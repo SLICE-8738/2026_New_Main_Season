@@ -68,6 +68,7 @@ public final class Constants {
         public static final double STAGE_ONE_INTAKE_SPEED = 0.9;
         public static final double STAGE_ONE_INTAKE_PASSIVE_SPEED = 0.2;
         public static final double STAGE_TWO_INTAKE_SPEED = 1;
+        public static final double STAGE_TWO_INTAKE_REVERSE_SPEED  = -0.2;
 
         public static final int INDEXER_STATOR_CURRENT_LIMIT = 80;
         public static final int INDEXER_SUPPLY_CURRENT_LIMIT = 60;
@@ -229,10 +230,10 @@ public final class Constants {
         static {
             SHOOTER_MAP.put(2.064, new FullShooterParams(-2250.0));
             SHOOTER_MAP.put(2.516, new FullShooterParams(-2375.0));
-            SHOOTER_MAP.put(2.730, new FullShooterParams(-2400.0));
-            SHOOTER_MAP.put(3.02,  new FullShooterParams(-2425.0));
-            SHOOTER_MAP.put(3.184, new FullShooterParams(-2500.0));
-            SHOOTER_MAP.put(3.474, new FullShooterParams(-2550.0));
+            SHOOTER_MAP.put(2.730, new FullShooterParams(-2500.0));
+            SHOOTER_MAP.put(3.02,  new FullShooterParams(-2500.0));
+            SHOOTER_MAP.put(3.184, new FullShooterParams(-2525.0));
+            SHOOTER_MAP.put(3.474, new FullShooterParams(-2580.0));
             SHOOTER_MAP.put(3.999, new FullShooterParams(-2675.0));
             SHOOTER_MAP.put(4.265, new FullShooterParams(-2800.0));
             SHOOTER_MAP.put(4.497, new FullShooterParams(-2925.0));
@@ -258,7 +259,7 @@ public final class Constants {
             PASSING_MAP.put(2.290, new FullPassingParams(-2700.0));
             PASSING_MAP.put(3.167, new FullPassingParams(-2900.0));
             PASSING_MAP.put(3.587, new FullPassingParams(-3100.0));
-        
+            PASSING_MAP.put(4.0, new FullPassingParams(-3700.0));
 
         }
 
