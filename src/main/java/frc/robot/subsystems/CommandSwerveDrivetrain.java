@@ -136,11 +136,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         swerveModules = modules;
 
         
-        if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue){
-            m_Pigeon2.setYaw(0);
-        } else {
-            m_Pigeon2.setYaw(180);
-        }
+        // if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue){
+        //     m_Pigeon2.setYaw(0);
+        // } else {
+        //     m_Pigeon2.setYaw(180);
+        // }
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -159,11 +159,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         swerveModules = modules;
         
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-            m_Pigeon2.setYaw(0);
-        } else {
-            m_Pigeon2.setYaw(180);
-        }
+        // if(DriverStation.getAlliance().get() == Alliance.Blue){
+        //     m_Pigeon2.setYaw(0);
+        // } else {
+        //     m_Pigeon2.setYaw(180);
+        // }
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants drivetrainConstants, double odometryUpdateFrequency,
@@ -183,11 +183,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
         swerveModules = modules;
         
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
-            m_Pigeon2.setYaw(0);
-        } else {
-            m_Pigeon2.setYaw(180);
-        }
+        // if(DriverStation.getAlliance().get() == Alliance.Blue){
+        //     m_Pigeon2.setYaw(0);
+        // } else {
+        //     m_Pigeon2.setYaw(180);
+        // }
     }
 
     private void configHeadingPID() {
@@ -414,7 +414,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private void updateVisionWithCamera(String limelightName){
         LimelightHelpers.SetRobotOrientation(limelightName, getState().Pose.getRotation().getDegrees(), 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate vision1 = LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+        LimelightHelpers.PoseEstimate vision1 = LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName);
 
         if (vision1 == null || vision1.tagCount == 0) return;
 

@@ -39,17 +39,21 @@ public final class Constants {
     }
 
     public final class AlignTargets {
-        /*
+        
         public static final Translation2d BLUE_HUB = new Translation2d(4.625, 4.034);
         public static final Translation2d RED_HUB = new Translation2d(11.915, 4.034);
-        */
-        public static final Translation2d RED_HUB = new Translation2d(4.625, 4.034);
-        public static final Translation2d BLUE_HUB = new Translation2d(11.915, 4.034);
         
-        public static final Translation2d RED_TRENCH_LEFT = new Translation2d(4.625, 2.395);
-        public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(4.625, 5.675);
-        public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(11.915, 2.395);
-        public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(11.915, 5.675);
+        // public static final Translation2d RED_HUB = new Translation2d(4.625, 4.034);
+        // public static final Translation2d BLUE_HUB = new Translation2d(11.915, 4.034);
+        
+        public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(4.625, 2.395);
+        public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(4.625, 5.675);
+        public static final Translation2d RED_TRENCH_LEFT = new Translation2d(11.915, 2.395);
+        public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(11.915, 5.675);
+        // public static final Translation2d RED_TRENCH_LEFT = new Translation2d(4.625, 2.395);
+        // public static final Translation2d RED_TRENCH_RIGHT = new Translation2d(4.625, 5.675);
+        // public static final Translation2d BLUE_TRENCH_LEFT = new Translation2d(11.915, 2.395);
+        // public static final Translation2d BLUE_TRENCH_RIGHT = new Translation2d(11.915, 5.675);
 
         public static final Translation2d BLUE_PASS_LEFT = new Translation2d(3.0, 6.5);
         public static final Translation2d BLUE_PASS_RIGHT = new Translation2d(3.0, 1.5);
@@ -301,8 +305,10 @@ public final class Constants {
         public static final double SPEED_SHOOTER_AT = 5; // Seconds
 
         // Distances to check if we are past the alliance zone
-        public static final double RED_OUTSIDE_ALLIANCE_ZONE = 5.209; // Metres
-        public static final double BLUE_OUTSIDE_ALLIANCE_ZONE = 11.305; // Metres
+        //public static final double RED_OUTSIDE_ALLIANCE_ZONE = 5.209; // Metres
+        //public static final double BLUE_OUTSIDE_ALLIANCE_ZONE = 11.305; // Metres
+        public static final double BLUE_OUTSIDE_ALLIANCE_ZONE = 5.209; // Metres
+        public static final double RED_OUTSIDE_ALLIANCE_ZONE = 11.305; // Metres
 
     }
 
