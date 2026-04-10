@@ -40,6 +40,9 @@ public class ShuffleboardData extends SubsystemBase {
     SimpleWidget drivetrainVelocityX;
     SimpleWidget drivetrainVelocityY;
 
+    /* Shooter */
+    SimpleWidget isOutsideAlliance;
+
 
     ///////////////////////////
     /// Debug Tab Values //////
@@ -97,6 +100,10 @@ public class ShuffleboardData extends SubsystemBase {
         drivetrainVelocityX = driverTab.add("Drivetrain Velocity X", m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
         drivetrainVelocityY = driverTab.add("Drivetrian Velocity Y", m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
 
+        /* Shooter */
+        isOutsideAlliance = driverTab.add("Is Outside Alliance Zone", m_CommandSwerveDrivetrain.detectOutsideAlliance())
+            .withWidget(BuiltInWidgets.kBooleanBox);
+
         
         ///////////////////////////
         /// Debug Tab Values //////
@@ -144,6 +151,8 @@ public class ShuffleboardData extends SubsystemBase {
         
         drivetrainVelocityX.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vxMetersPerSecond);
         drivetrainVelocityY.getEntry().setDouble(m_CommandSwerveDrivetrain.getChassisSpeeds().vyMetersPerSecond);
+
+        isOutsideAlliance.getEntry().setBoolean(m_CommandSwerveDrivetrain.detectOutsideAlliance());
 
         ///////////////////////////
         /// Debug Tab Values //////
