@@ -136,7 +136,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         swerveModules = modules;
 
         
-        if(DriverStation.getAlliance().get() == Alliance.Blue){
+        if(DriverStation.getAlliance().orElse(Alliance.Blue) == Alliance.Blue){
             m_Pigeon2.setYaw(0);
         } else {
             m_Pigeon2.setYaw(180);
@@ -423,7 +423,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         double avgDist = vision1.avgTagDist;
         double xyStdDev = 0.3 + (avgDist * 0.1);
 
-        addVisionMeasurement(vision1.pose, vision1.timestampSeconds, VecBuilder.fill(xyStdDev, xyStdDev, 2.0));
+        addVisionMeasurement(vision1.pose, vision1.timestampSeconds, VecBuilder.fill(xyStdDev, xyStdDev, 100.0));
     }
 
     @Override

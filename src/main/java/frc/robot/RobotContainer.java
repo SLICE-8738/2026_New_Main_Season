@@ -102,6 +102,7 @@ public class RobotContainer {
     public final SpinStageTwo m_spinStageTwo;
     public final SpinStageOne m_stopStageOne;
     public final StageOnePassive m_stageOnePassive;
+    public final SpinBothIndexer m_SpinBothIndexer;
 
     /* Shooter */
     
@@ -175,14 +176,15 @@ public class RobotContainer {
         // Removed the conditional command because it is not working properly, and is overriding manual controls
         m_IntakeCommand   = new ExtendIntake(m_Intake);//new ConditionalCommand(m_ExtendIntake.andThen(m_Spintake), m_Stoptake, () -> (m_Intake.isStowed() == true));
 
-        m_TestExtendIntake = new MoveIntake(m_Intake, 0.05);
-        m_TestRetractIntake = new MoveIntake(m_Intake, -0.05);
+        m_TestExtendIntake = new MoveIntake(m_Intake, 0.4);
+        m_TestRetractIntake = new MoveIntake(m_Intake, -0.4);
 
         /* Indexer */
         m_spinStageOne = new SpinStageOne(m_Indexer, 1);
         m_spinStageTwo = new SpinStageTwo(m_Indexer, 1);
         m_stopStageOne = new SpinStageOne(m_Indexer, 0);
         m_stageOnePassive = new StageOnePassive(m_Indexer);
+        m_SpinBothIndexer = new SpinBothIndexer(m_Indexer);
 
         /* Shooter */
         m_shoot = new Shoot(m_Shooter, m_drivetrain);
@@ -198,8 +200,6 @@ public class RobotContainer {
          *         new ParallelCommandGroup(new SpinStageOne(m_Indexer, Constants.IndexerConstants.STAGE_ONE_INTAKE_SPEED), new SpinStageTwo(m_Indexer, Constants.IndexerConstants.STAGE_TWO_INTAKE_SPEED))));
         */
 
-        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
-        SmartDashboard.putData("Auto Mode", autoChooser);
 
         /*
         TODO more auto stuff to figure the heck out of
@@ -212,6 +212,14 @@ public class RobotContainer {
         NamedCommands.registerCommand("Extend Intake", m_ExtendIntake);
         NamedCommands.registerCommand("Retract Intake", m_RetractIntake);
         NamedCommands.registerCommand("Shoot", m_shoot);
+        NamedCommands.registerCommand("Auto Align Hub", m_AutoAlignHub);
+        NamedCommands.registerCommand("Spin Both Indexer", m_SpinBothIndexer);
+        
+
+        autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
+        SmartDashboard.putData("Auto Mode", autoChooser);
+
+        
         
 
         //autoChooser = AutoBuilder.buildAutoChooser("Left Auto Trench");
@@ -356,10 +364,10 @@ public class RobotContainer {
         joystick.start().and(joystick.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
         joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
         // Reset the field-centric heading on left bumper press.
-        joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));
-        drivetrain.registerTelemetry(logger::telemeterize);
+        joystick.back().onTrue(drivetrain.runOnce(drivetrain::seedFieldCentric));*/
+        m_drivetrain.registerTelemetry((new Telemetry(5.0))::telemeterize);
 
-        */
+        
 
         /*
         driveIntakeTrigger.whileTrue(m_drivetrain.applyRequest(() ->

@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.config.RobotConfig;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -165,13 +167,13 @@ public final class Constants {
         public static final int EXTENDER_MOTOR_ID = 5;
 
         // Positional subsystem constants
-        public static final double EXTENDER_KP = 2.5;
+        public static final double EXTENDER_KP = 5.0;
         public static final double EXTENDER_KI = 0;
         public static final double EXTENDER_KD = 0.035;
         public static final double EXTENDER_KG = 0.0; // FF for gravity, most likely don't need this
         public static final double EXTENDER_RATIO = 50.0 / 9.0; // 5.55 repeating
-        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 20;
-        public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 15;
+        public static final int EXTENDER_STATOR_CURRENT_LIMIT = 60;
+        public static final int EXTENDER_SUPPLY_CURRENT_LIMIT = 40;
         public static final double POSITION_CONVERSION_FACTOR = (0.0254 * Math.PI); // (pitch diameter of pinion * pi)
         public static final double VELOCITY_CONVERSION_FACTOR = POSITION_CONVERSION_FACTOR; // meters per second
 
@@ -204,8 +206,8 @@ public final class Constants {
         public static final double FLYWHEEL_KD = 0.001;
         public static final double FLYWHEEL_KS = 1.5;
         public static final double FLYWHEEL_KV = 0.12;
-        public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 60;
-        public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 40;
+        public static final int FLYWHEEL_STATOR_CURRENT_LIMIT = 70;
+        public static final int FLYWHEEL_SUPPLY_CURRENT_LIMIT = 50;
 
         public static final double FLYWHEEL_GEAR_RATIO = 24.0/22.0;//22.0/24.0;
         public static final double PIVOT_GEAR_RATIO = 4.75 * 16.5;
@@ -260,6 +262,7 @@ public final class Constants {
             PASSING_MAP.put(3.167, new FullPassingParams(-2900.0));
             PASSING_MAP.put(3.587, new FullPassingParams(-3100.0));
             PASSING_MAP.put(4.0, new FullPassingParams(-3700.0));
+            PASSING_MAP.put(8.0, new FullPassingParams(-4414.0));
 
         }
 
