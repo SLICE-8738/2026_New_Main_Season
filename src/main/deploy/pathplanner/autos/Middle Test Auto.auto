@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Center Run"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Center Intake"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left Return Trench"
+            "pathName": "Middle Reverse"
           }
         },
         {
@@ -58,12 +46,6 @@
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Left 2nd Sweep Return"
           }
         }
       ]

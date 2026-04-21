@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 6.389322222222223,
-        "y": 6.1398
+        "x": 7.623067047075606,
+        "y": 6.3963052781740375
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.262644444444445,
-        "y": 6.685488888888889
+        "x": 7.496389269297828,
+        "y": 6.941994167062926
       },
       "isLocked": true,
       "linkedName": "Left Center Intake"
@@ -40,14 +40,14 @@
         "y": 7.133733333333334
       },
       "nextControl": null,
-      "isLocked": true,
-      "linkedName": null
+      "isLocked": false,
+      "linkedName": "First Shot"
     }
   ],
   "rotationTargets": [
     {
       "waypointRelativePos": 1.1,
-      "rotationDegrees": -5.5917107680533675
+      "rotationDegrees": -2.818405742575831
     }
   ],
   "constraintZones": [],
